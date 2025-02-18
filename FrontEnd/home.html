@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOS Burger System</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="CSS/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <p class="logo">MOS BURGER LOGO</p>
+            <i class='bx bx-menu' id="mIcon"></i>
+            <nav>
+                <ul class="nav_links">
+                    <li class="nav_li"><a class="navigate_active" href="#home">Home</a></li>
+                    <li class="nav_li"><a class="navigate" href="#contactUs">Contact Us</a></li>
+                    <li class="nav_li"><a class="navigate" href="#about">About</a></li>
+                </ul>
+            </nav>
+            <a class="navigate" href=""><button class="btnsignUp">Cashier</button></a>
+        </header>
+
+        <section class="home" id="home">
+            <div class="mainHead">
+                <!-- <img src="Images/home image.jpg" class="home_image" alt="Burger Image"> -->
+                <!-- <div class="btnOptionDiv">
+                    <button class="btnoptions">
+                        <a style="text-decoration: none; color: #ffa500;" href="placeOrder.html">Order Processing</a>
+                        <span class="first"></span>
+                        <span class="second"></span>
+                        <span class="third"></span>
+                        <span class="fourth"></span>
+                    </button>
+                    <button class="btnoptions">
+                        <a style="text-decoration: none; color: #ffa500;" href="storeManagement.html">Store Management</a>
+                        <span class="first"></span>
+                        <span class="second"></span>
+                        <span class="third"></span>
+                        <span class="fourth"></span>
+                    </button>
+                    <button class="btnoptions">
+                        <a style="text-decoration: none; color: #ffa500;" href="customerManagement.html">Customer Management</a>
+                        <span class="first"></span>
+                        <span class="second"></span>
+                        <span class="third"></span>
+                        <span class="fourth"></span>
+                    </button>
+                </div> -->
+
+                <div class="buttons-container">
+                    <button type="button" class="btn" onclick="window.location.href='placeOrder.html';">
+                        <strong>Order Processing</strong>
+                        <div id="container-stars">
+                            <div id="stars"></div>
+                        </div>
+                        <div id="glow">
+                            <div class="circle"></div>
+                            <div class="circle"></div>
+                        </div>
+                    </button>
+
+                    <button type="button" class="btn" onclick="window.location.href='storeManagement.html';">
+                        <strong>Store Management</strong>
+                        <div id="container-stars">
+                            <div id="stars"></div>
+                        </div>
+                        <div id="glow">
+                            <div class="circle"></div>
+                            <div class="circle"></div>
+                        </div>
+                    </button>
+
+                    <button type="button" class="btn" onclick="window.location.href='customerManagement.html';">
+                        <strong>Customer Management</strong>
+                        <div id="container-stars">
+                            <div id="stars"></div>
+                        </div>
+                        <div id="glow">
+                            <div class="circle"></div>
+                            <div class="circle"></div>
+                        </div>
+                    </button>
+                </div>
+
+
+            </div>
+        </section>
+
+
+    </div>
+
+
+
+
+
+
+    <script src="JS/stylingFunction.js"></script>
+</body>
+
+</html>
