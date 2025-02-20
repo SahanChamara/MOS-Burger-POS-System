@@ -1,10 +1,19 @@
-import React from "react";
+import { useState } from "react";
 import "./signin.css";
 
 const SignIn = () => {
+  const [userName,setUserName] = useState("");
+  const [password,setPassword] = useState("");
+
+  const userDetails = () =>{
+    console.log(userName);
+    console.log(password);
+    
+  }
+
   return (
     <div>
-      <body>
+      <div className="body">
         <div className="login-container">
           <div className="brand-section">
             <h2>Welcome to Mos Burger POS </h2>
@@ -20,20 +29,20 @@ const SignIn = () => {
             </div>
             <form>
               <div className="input-group">
-                <input type="text" id="userName" placeholder="Username" />
+                <input type="text" id="userName" onChange={(e)=> setUserName(e.target.value)} placeholder="Username" />
                 <i className="fas fa-user"></i>
               </div>
               <div className="input-group">
-                <input type="password" id="pass" placeholder="Password" />
+                <input type="password" id="pass" onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
                 <i className="fas fa-lock"></i>
               </div>
-              <button type="button" className="login-button" onClick="signIn()">
+              <button type="button" onClick={userDetails} className="login-button">
                 Sign In
               </button>
             </form>
           </div>
         </div>
-      </body>
+      </div>
     </div>
   );
 };
