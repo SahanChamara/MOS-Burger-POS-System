@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "foodItem")
-public class FoodItem {
+public class FoodItemEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer itemId;
@@ -27,5 +27,5 @@ public class FoodItem {
     private boolean isDeleted;
 
     @OneToMany(mappedBy = "foodItem")
-    private List<OrderDetail> orderDetails;
+    private List<OrderDetailEntity> orderDetails;
 }

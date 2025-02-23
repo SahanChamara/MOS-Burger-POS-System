@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "customer")
-public class Customer {
+public class CustomerEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +24,7 @@ public class Customer {
     private boolean isDeleted;
 
     @OneToMany(mappedBy = "customer")
-    private List<Order> orders;
+    private List<OrderEntity> orders;
 
 
 }

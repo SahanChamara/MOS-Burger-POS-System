@@ -1,4 +1,4 @@
-package org.icet.crm.entity;
+package org.icet.crm.dto;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,18 +9,11 @@ import org.icet.crm.enums.UserRole;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "user")
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
     private String userName;
     private String password;
     private String email;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private UserRole userRole;
     private boolean isDeleted;
 

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "orderDetail")
-public class OrderDetail {
+public class OrderDetailEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer orderDetailId;
@@ -20,9 +20,9 @@ public class OrderDetail {
 
     @ManyToOne
     @JoinColumn(name = "orderId")
-    private Order order;
+    private OrderEntity order;
 
     @ManyToOne
     @JoinColumn(name = "itemId")
-    private FoodItem foodItem;
+    private FoodItemEntity foodItem;
 }
