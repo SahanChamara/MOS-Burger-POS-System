@@ -1,15 +1,29 @@
 import { useState } from "react";
 import "./signin.css";
+import axios from "axios";
 
 const SignIn = () => {
-  const [userName,setUserName] = useState("");
-  const [password,setPassword] = useState("");
+  const[user, setUser] = useState({
+    email: "",
+    password: ""
+  });
 
-  const userDetails = () =>{
-    console.log(userName);
-    console.log(password);
+  const handleChange = (e) =>{
+    setUser({
+      ...user,[e.target.name]: e.target.value});
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    await axios.post('http://localhost:8080/api/v1/login',user)
+    .then(response => {
+      if(response.data==="Found"){
+      }
+    })
     
-  }
+
+    
+  };
 
   return (
     <div>
@@ -27,16 +41,28 @@ const SignIn = () => {
               <h1>Login to POS</h1>
               <p>Enter your credentials to access the system</p>
             </div>
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="input-group">
-                <input type="text" id="userName" onChange={(e)=> setUserName(e.target.value)} placeholder="Username" />
+                <input
+                  type="text"
+                  id="email"                  
+                  placeholder="Email"
+                  name="email"
+                  onChange={handleChange}
+                />
                 <i className="fas fa-user"></i>
               </div>
               <div className="input-group">
-                <input type="password" id="pass" onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
+                <input
+                  type="password"
+                  id="pass"                  
+                  placeholder="Password"
+                  name="password"
+                  onChange={handleChange}
+                />
                 <i className="fas fa-lock"></i>
               </div>
-              <button type="button" onClick={userDetails} className="login-button">
+              <button type="submit" className="login-button">
                 Sign In
               </button>
             </form>

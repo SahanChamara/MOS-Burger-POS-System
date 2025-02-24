@@ -10,7 +10,7 @@ import org.icet.crm.enums.UserRole;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    private Integer userId;
+    private Long userId;
     private String userName;
     private String password;
     private String email;

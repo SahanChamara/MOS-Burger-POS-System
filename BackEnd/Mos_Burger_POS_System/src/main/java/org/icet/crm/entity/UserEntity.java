@@ -14,7 +14,7 @@ import org.icet.crm.enums.UserRole;
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer userId;
+    private Long userId;
     private String userName;
     private String password;
     private String email;
@@ -22,6 +22,12 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole userRole;
-    private boolean isDeleted;
+
+    @Column(name = "is_deleted", columnDefinition = "TINYINT(1)",nullable = false)
+    private Boolean isDeleted=false;
+
+    public void softDelete(){
+        this.isDeleted=true;
+    }
 
 }
