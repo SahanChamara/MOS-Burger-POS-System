@@ -20,6 +20,10 @@ const SignIn = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    console.log(user);
+    
+
     await axios.post('http://localhost:8080/api/v1/login',user)
     .then(response => {
       if(response.data==="Found"){

@@ -1,5 +1,5 @@
 import React from "react";
-import './MosBurgerLandPage.css'
+import './MosBurgerLandPage.css';
 
 import { useNavigate } from "react-router-dom";
 
@@ -51,17 +51,13 @@ const MosBurgerLandPage = () => {
                 <p>Manage customer orders</p>
               </div>
               <div
-                className="land-page-action-button"
-                
-              >
+                className="land-page-action-button"  >
                 <i className="land-page-fas fa-store"></i>
                 <h3>Store Management</h3>
                 <p>Control inventory & settings</p>
               </div>
               <div
-                className="land-page-action-button"
-                
-              >
+                className="land-page-action-button" >
                 <i className="land-page-fas fa-users"></i>
                 <h3>Customer Management</h3>
                 <p>Handle customer data</p>

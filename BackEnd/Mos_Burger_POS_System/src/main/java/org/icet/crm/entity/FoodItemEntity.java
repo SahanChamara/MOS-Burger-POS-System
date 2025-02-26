@@ -23,8 +23,14 @@ public class FoodItemEntity {
     private Integer qtyOnHand;
     private Double itemDiscountPercentage;
     private LocalDate expirationDate;
-    private boolean isExpired;
-    private boolean isDeleted;
+    private String imagePath;
+
+    @Column(name = "is_expired",columnDefinition = "TINYINT(1)",nullable = false)
+
+    private boolean isExpired=false;
+
+    @Column(name = "is_deleted", columnDefinition = "TINYINT(1)",nullable = false)
+    private boolean isDeleted=false;
 
     @OneToMany(mappedBy = "foodItem")
     private List<OrderDetailEntity> orderDetails;

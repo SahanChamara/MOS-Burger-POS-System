@@ -18,6 +18,7 @@ public class FoodItem {
     private Double price;
     private Integer qtyOnHand;
     private Double itemDiscountPercentage;
+    private String imagePath;
     private LocalDate expirationDate;
     private boolean isExpired;
     private boolean isDeleted;
