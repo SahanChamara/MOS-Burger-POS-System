@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./signin.css";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
   const[user, setUser] = useState({
@@ -13,16 +14,20 @@ const SignIn = () => {
       ...user,[e.target.name]: e.target.value});
   };
 
+  let [erorMsg, setErorMsg] = useState("")
+
+  const navigate = useNavigate();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     await axios.post('http://localhost:8080/api/v1/login',user)
     .then(response => {
       if(response.data==="Found"){
+          navigate('/home');
+      }else {
+        setErorMsg("Unauthorized Access");
       }
-    })
-    
-
-    
+    })    
   };
 
   return (
@@ -38,6 +43,7 @@ const SignIn = () => {
           </div>
           <div className="login-form">
             <div className="form-header">
+              {erorMsg && <p className="error-msg">{erorMsg}</p>}
               <h1>Login to POS</h1>
               <p>Enter your credentials to access the system</p>
             </div>
