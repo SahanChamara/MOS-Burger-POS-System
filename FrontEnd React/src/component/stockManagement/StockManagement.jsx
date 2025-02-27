@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./StockManagement.css";
 import { supabase } from "../../config/supabaseClient";
 import axios from "axios";
@@ -24,7 +24,7 @@ const StockManagement = () => {
   };
 
   const [image, setImage] = useState(null);
-  const [imageUrl, setImageUrl] = useState("");
+  // const [imageUrl, setImageUrl] = useState("");
 
   const handleImage = (e) => {
     setImage(e.target.files[0]);
@@ -37,7 +37,7 @@ const StockManagement = () => {
     }
 
     const fileName = `${Date.now()}-${image.name}`;
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from("mosburger")
       .upload(fileName, image);
 
@@ -51,11 +51,12 @@ const StockManagement = () => {
 
     let imageUrl = urlData.publicUrl;
 
-    setImageUrl(imageUrl);
-    console.log("image url:", imageUrl);
+    /* setImageUrl(imageUrl);
+    console.log("image url:", imageUrl); */
     return imageUrl;
   };
 
+  // add the food tems
   const handleSubmit = async (event) => {
     event.preventDefault();
     const url = await handleImageUpload();
@@ -69,10 +70,26 @@ const StockManagement = () => {
         .post("http://localhost:8080/api/v1/stock/add", updatedFoodItem)
         .then((response) => {
           console.log(response.data);
+          loadFoodItems();
         });
     }
   };
 
+  // load the food Items
+  const [foodItems, setFoodItems] = useState([]);
+
+  useEffect(() => {
+    loadFoodItems();
+  }, []);
+
+  const loadFoodItems = async () => {
+    await axios
+      .get("http://localhost:8080/api/v1/stock/getAll")
+      .then((response) => {
+        console.log(response.data);
+        setFoodItems(response.data);
+      });
+  };
   return (
     <div>
       <div className="stock-management-body">
@@ -304,105 +321,34 @@ const StockManagement = () => {
             </div>
 
             <div className="stock-management-item-grid">
-              <div className="stock-management-item-card">
-                <img
-                  src="/api/placeholder/250/180"
-                  alt="Classic Burger"
-                  className="stock-management-item-image"
-                />
-                <div className="stock-management-item-details">
-                  <div className="stock-management-item-name">
-                    Classic Burger
-                  </div>
-                  <div className="stock-management-item-price">RS 450</div>
-                  <span className="stock-management-item-stock">
-                    In Stock: 24
-                  </span>
-                  <div className="stock-management-item-actions">
-                    <button className="stock-management-btn btn-outline item-btn">
-                      Edit
-                    </button>
-                    <button className="stock-management-btn btn-primary item-btn">
-                      View
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="stock-management-item-card">
-                <img
-                  src="/api/placeholder/250/180"
-                  alt="Cheese Burger"
-                  className="stock-management-item-image"
-                />
-                <div className="stock-management-item-details">
-                  <div className="stock-management-item-name">
-                    Cheese Burger
-                  </div>
-                  <div className="stock-management-item-price">RS 550</div>
-                  <span className="stock-management-item-stock">
-                    In Stock: 18
-                  </span>
-                  <div className="stock-management-item-actions">
-                    <button className="stock-management-btn btn-outline item-btn">
-                      Edit
-                    </button>
-                    <button className="stock-management-btn btn-primary item-btn">
-                      View
-                    </button>
+              {foodItems.map((food) => (
+                <div key={food.itemId} className="stock-management-item-card">
+                  <img
+                    src={food.imagePath}
+                    alt={food.itemName}
+                    className="stock-management-item-image"
+                  />
+                  <div className="stock-management-item-details">
+                    <div className="stock-management-item-name">
+                      {food.itemName}
+                    </div>
+                    <div className="stock-management-item-price">
+                      Rs.{food.price}
+                    </div>
+                    <span className="stock-management-item-stock">
+                      In Stock: {food.qtyOnHand}
+                    </span>
+                    <div className="stock-management-item-actions">
+                      <button className="stock-management-btn btn-outline item-btn">
+                        Edit
+                      </button>
+                      <button className="stock-management-btn btn-primary item-btn">
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-
-              <div className="stock-management-item-card">
-                <img
-                  src="/api/placeholder/250/180"
-                  alt="Spicy Chicken Burger"
-                  className="stock-management-item-image"
-                />
-                <div className="stock-management-item-details">
-                  <div className="stock-management-item-name">
-                    Spicy Chicken Burger
-                  </div>
-                  <div className="stock-management-item-price">RS 600</div>
-                  <span className="stock-management-item-stock">
-                    In Stock: 12
-                  </span>
-                  <div className="stock-management-item-actions">
-                    <button className="stock-management-btn btn-outline item-btn">
-                      Edit
-                    </button>
-                    <button className="stock-management-btn btn-primary item-btn">
-                      View
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="stock-management-item-card">
-                <img
-                  src="/api/placeholder/250/180"
-                  alt="Veggie Burger"
-                  className="stock-management-item-image"
-                />
-                <div className="stock-management-item-details">
-                  <div className="stock-management-item-name">
-                    Veggie Burger
-                  </div>
-                  <div className="stock-management-item-price">RS 500</div>
-                  <span className="stock-management-item-stock">
-                    In Stock: 8
-                  </span>
-                  <div className="stock-management-item-actions">
-                    <button className="stock-management-btn btn-outline item-btn">
-                      Edit
-                    </button>
-                    <button className="stock-management-btn btn-primary item-btn">
-                      View
-                    </button>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
