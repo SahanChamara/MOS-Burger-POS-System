@@ -6,6 +6,8 @@ import org.icet.crm.service.StockService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/stock")
 @CrossOrigin
@@ -20,5 +22,10 @@ public class StockController {
              return ResponseEntity.ok("Item Added Successful");
          }
         return ResponseEntity.ok("Item Added Failed");
+    }
+
+    @GetMapping("/getAll")
+    public List<FoodItem> getAllFoodItems(){
+        return stockService.getAllFoodItems();
     }
 }

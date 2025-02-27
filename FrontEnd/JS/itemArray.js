@@ -1,5 +1,5 @@
 //IItem array
-export let itemArr = [
+export const itemArr = [
     {
         itemCode: "B1001",
         itemNAme: "Classic Burger (Large)",

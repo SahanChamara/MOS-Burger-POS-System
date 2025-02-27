@@ -140,8 +140,8 @@ const StockManagement = () => {
                 >
                   <option value="">Select category</option>
                   <option value="burger">Burger</option>
-                  <option value="sides">Sides</option>
-                  <option value="drinks"> Drinks</option>
+                  <option value="chicken">Chicken</option>
+                  <option value="fries"> Fries</option>
                   <option value="desserts">Desserts</option>
                 </select>
               </div>
