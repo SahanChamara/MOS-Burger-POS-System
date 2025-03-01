@@ -1,0 +1,58 @@
+# === Frontend (React) ===
+# Dependency directories
+**/node_modules/
+/.pnp
+.pnp.js
+
+# Build files
+/build/
+/dist/
+.cache/
+.next/
+out/
+
+# Environment files
+.env*.local
+.env.development
+.env.production
+.env.test
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# === Backend (Spring Boot) ===
+# Build files
+/target/
+**/target/
+*.jar
+*.war
+*.ear
+*.class
+
+# Dependency directories (Maven/Gradle)
+.mvn/
+.gradle/
+**/gradle/
+**/gradlew
+**/gradlew.bat
+
+# Logs
+*.log
+logs/
+
+# Local development files
+application.properties
+application-dev.properties
+
+# === OS/General ===
+.DS_Store
+Thumbs.db
+*.iml
