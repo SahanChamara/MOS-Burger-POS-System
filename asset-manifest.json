@@ -1,19 +1,19 @@
 {
   "files": {
     "main.css": "/MOS-Burger-POS-System/static/css/main.45965f3b.css",
-    "main.js": "/MOS-Burger-POS-System/static/js/main.3925c628.js",
+    "main.js": "/MOS-Burger-POS-System/static/js/main.56ade05a.js",
     "static/js/952.cd7f9ac8.chunk.js": "/MOS-Burger-POS-System/static/js/952.cd7f9ac8.chunk.js",
     "static/js/453.85104386.chunk.js": "/MOS-Burger-POS-System/static/js/453.85104386.chunk.js",
     "static/media/login page image.png": "/MOS-Burger-POS-System/static/media/login page image.e0fa04ba84ba0c1df48f.png",
     "static/media/home page background Image.jpg": "/MOS-Burger-POS-System/static/media/home page background Image.d82a5da29fc2f15e3433.jpg",
     "index.html": "/MOS-Burger-POS-System/index.html",
     "main.45965f3b.css.map": "/MOS-Burger-POS-System/static/css/main.45965f3b.css.map",
-    "main.3925c628.js.map": "/MOS-Burger-POS-System/static/js/main.3925c628.js.map",
+    "main.56ade05a.js.map": "/MOS-Burger-POS-System/static/js/main.56ade05a.js.map",
     "952.cd7f9ac8.chunk.js.map": "/MOS-Burger-POS-System/static/js/952.cd7f9ac8.chunk.js.map",
     "453.85104386.chunk.js.map": "/MOS-Burger-POS-System/static/js/453.85104386.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.45965f3b.css",
-    "static/js/main.3925c628.js"
+    "static/js/main.56ade05a.js"
   ]
 }
