@@ -7,4 +7,5 @@ import java.util.List;
 public interface StockService {
     FoodItem additem(FoodItem foodItem);
     List<FoodItem> getAllFoodItems();
+    boolean delete(Integer itemId);
 }

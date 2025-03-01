@@ -51,7 +51,7 @@ const MosBurgerLandPage = () => {
                 <p>Manage customer orders</p>
               </div>
               <div
-                className="land-page-action-button"  >
+                className="land-page-action-button"  onClick={() => navigate('/stock')}>
                 <i className="land-page-fas fa-store"></i>
                 <h3>Store Management</h3>
                 <p>Control inventory & settings</p>

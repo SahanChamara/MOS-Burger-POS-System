@@ -29,9 +29,18 @@ public class StockServiceImpl implements StockService {
     @Override
     public List<FoodItem> getAllFoodItems() {
         List<FoodItem> foodItemList = new ArrayList<>();
-        for (FoodItemEntity foodItemEntity : stockRepository.findAll()) {
+        for (FoodItemEntity foodItemEntity : stockRepository.findActiveFoodItems()) {
             foodItemList.add(mapper.map(foodItemEntity, FoodItem.class));
         }
         return Collections.unmodifiableList(foodItemList);
+    }
+
+    @Override
+    public boolean delete(Integer itemId) {
+        stockRepository.findById(itemId).ifPresent(foodItemEntity -> {
+            foodItemEntity.softDelete();
+            stockRepository.save(foodItemEntity);
+        });
+        return true;
     }
 }

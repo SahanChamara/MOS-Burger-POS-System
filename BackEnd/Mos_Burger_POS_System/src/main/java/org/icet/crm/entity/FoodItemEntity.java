@@ -34,4 +34,8 @@ public class FoodItemEntity {
 
     @OneToMany(mappedBy = "foodItem")
     private List<OrderDetailEntity> orderDetails;
+
+    public void softDelete(){
+        this.isDeleted=true;
+    }
 }

@@ -28,4 +28,12 @@ public class StockController {
     public List<FoodItem> getAllFoodItems(){
         return stockService.getAllFoodItems();
     }
+
+    @DeleteMapping("/delete/{itemId}")
+    public ResponseEntity<String> delete(@PathVariable Integer itemId){
+        if(stockService.delete(itemId)){
+            return ResponseEntity.ok("Delete Successful");
+        }
+        return ResponseEntity.ok("Delete Failed");
+    }
 }

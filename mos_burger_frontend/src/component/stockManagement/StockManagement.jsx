@@ -50,9 +50,6 @@ const StockManagement = () => {
       .getPublicUrl(fileName);
 
     let imageUrl = urlData.publicUrl;
-
-    /* setImageUrl(imageUrl);
-    console.log("image url:", imageUrl); */
     return imageUrl;
   };
 
@@ -85,11 +82,27 @@ const StockManagement = () => {
   const loadFoodItems = async () => {
     await axios
       .get("http://localhost:8080/api/v1/stock/getAll")
-      .then((response) => {
+      .then(response => {
         console.log(response.data);
         setFoodItems(response.data);
       });
   };
+
+  // Deleting Food item
+  // const [itemId,setItemId] = useState("");
+
+  const deleteFoodItem = async (itemId) => {    
+    await axios.delete(`http://localhost:8080/api/v1/stock/delete/${itemId}`)
+    .then(response => {     
+      if(response.data === "Delete Successful"){
+        setFoodItems(foodItems.filter((food) => food.itemId !== itemId));
+        alert("Delete Success");        
+      }else {
+        alert("Delete Failed");
+      }
+    });
+  }
+
   return (
     <div>
       <div className="stock-management-body">
@@ -342,7 +355,7 @@ const StockManagement = () => {
                       <button className="stock-management-btn btn-outline item-btn">
                         Edit
                       </button>
-                      <button className="stock-management-btn btn-primary item-btn">
+                      <button className="stock-management-btn btn-primary item-btn" onClick={() => deleteFoodItem(food.itemId)}>
                         Delete
                       </button>
                     </div>
