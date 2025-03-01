@@ -105,7 +105,7 @@ const PlaceOrderPage = () => {
 
         <aside className="place-order-cart-container">
             <div className="place-order-cart-header">
-                Current Order
+                Current Order - We Can include the customer select option for this
             </div>
             <div className="place-order-cart-items">
                 <div className="place-order-cart-item">
