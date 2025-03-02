@@ -44,4 +44,13 @@ public class StockController {
         }
         return ResponseEntity.ok("Update Failed");
     }
+
+    @GetMapping("/search/{itemName}")
+    public FoodItem search(@PathVariable String itemName){
+        return stockService.searchItem(itemName);
+    }
+    @GetMapping("/searchById/{itemId}")
+    public FoodItem searchById(@PathVariable Integer itemId){
+        return stockService.searchById(itemId);
+    }
 }

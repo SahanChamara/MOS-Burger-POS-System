@@ -48,4 +48,14 @@ public class StockServiceImpl implements StockService {
     public FoodItem updateItem(FoodItem foodItem) {
         return mapper.map(stockRepository.save(mapper.map(foodItem, FoodItemEntity.class)), FoodItem.class);
     }
+
+    @Override
+    public FoodItem searchItem(String itemName) {
+        return mapper.map(stockRepository.findByItemName(itemName), FoodItem.class);
+    }
+
+    @Override
+    public FoodItem searchById(Integer itemId) {
+        return mapper.map(stockRepository.findById(itemId), FoodItem.class);
+    }
 }

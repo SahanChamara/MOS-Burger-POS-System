@@ -9,4 +9,7 @@ import java.util.List;
 public interface StockRepository extends JpaRepository<FoodItemEntity,Integer> {
     @Query("SELECT f FROM FoodItemEntity f WHERE f.isDeleted=false")
     List<FoodItemEntity> findActiveFoodItems();
+
+    List<FoodItemEntity> findByItemName(String itemName);
+
 }

@@ -17,7 +17,10 @@ public class FoodItemEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer itemId;
+
+    @Column(name = "item_name")
     private String itemName;
+
     private String category;
     private Double price;
     private Integer qtyOnHand;
