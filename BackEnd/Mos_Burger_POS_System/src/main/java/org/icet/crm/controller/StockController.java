@@ -5,6 +5,7 @@ import org.icet.crm.dto.FoodItem;
 import org.icet.crm.service.StockService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -45,9 +46,13 @@ public class StockController {
         return ResponseEntity.ok("Update Failed");
     }
 
-    @GetMapping("/search/{itemName}")
-    public FoodItem search(@PathVariable String itemName){
-        return stockService.searchItem(itemName);
+    @GetMapping("/search/{category}")
+    public ResponseEntity<Object> search(@PathVariable String category){
+        try{
+            return ResponseEntity.ok(stockService.searchItem(category));
+        }catch (ResponseStatusException ex){
+            return ResponseEntity.status(ex.getStatusCode()).body(ex.getReason());
+        }
     }
     @GetMapping("/searchById/{itemId}")
     public FoodItem searchById(@PathVariable Integer itemId){

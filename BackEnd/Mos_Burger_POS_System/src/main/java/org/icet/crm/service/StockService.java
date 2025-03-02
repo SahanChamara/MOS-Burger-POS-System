@@ -9,6 +9,6 @@ public interface StockService {
     List<FoodItem> getAllFoodItems();
     boolean delete(Integer itemId);
     FoodItem updateItem(FoodItem foodItem);
-    FoodItem searchItem(String itemName);
+    List<FoodItem> searchItem(String category);
     FoodItem searchById(Integer itemId);
 }

@@ -12,10 +12,12 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
+import { Alert, Snackbar } from "@mui/material";
+
 const StockManagement = () => {
   const fileInputRef = useRef(null);
 
-    // add the food Items
+  // add the food Items
   const [foodItem, setFoodItem] = useState({
     itemName: "",
     category: "",
@@ -115,20 +117,21 @@ const StockManagement = () => {
     const { name, value } = e.target;
     setUpdatingFood((prevState) => ({
       ...prevState,
-      [name]: value, 
+      [name]: value,
     }));
   };
 
   const handleUpdateSubmission = async () => {
-    await axios.put('http://localhost:8080/api/v1/stock/update',updatingFood)
-    .then(response => {
-      if(response.data === "Update Successful"){
-        loadFoodItems();
-      }
-    })
+    await axios
+      .put("http://localhost:8080/api/v1/stock/update", updatingFood)
+      .then((response) => {
+        if (response.data === "Update Successful") {
+          loadFoodItems();
+        }
+      });
   };
 
-  // MUI Dialog
+  // MUI Dialog an Update
   const [open, setOpen] = useState(false);
   const [updatingFood, setUpdatingFood] = useState({});
 
@@ -140,6 +143,28 @@ const StockManagement = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  //Search Item
+  const [searchCategoryName, setSearchCategoryName] = useState(""); // set the input Category Name
+  const [errorMsg, setErrorMsg] = useState(""); // set the error msg
+  const [alertPopup, setAlertPopup] = useState(false);
+
+  const handleSearch = async () => {
+    try {
+      await axios
+        .get(`http://localhost:8080/api/v1/stock/search/${searchCategoryName}`)
+        .then((response) => {
+          setFoodItems(response.data); // i use the load all item setFoodItems useState to get approach to this
+        });
+    } catch (err) {
+      setErrorMsg(err.response.data);
+      setAlertPopup(true);
+    }
+  };
+
+  const handleAlertClose = () => {
+    setAlertPopup(false);
+  }
 
   return (
     <div>
@@ -350,11 +375,13 @@ const StockManagement = () => {
           <div className="stock-management-card">
             <div className="stock-management-card-title">
               Current Inventory
-              <button className="stock-management-btn btn-outline">
+              <button
+                className="stock-management-btn btn-outline"
+                onClick={loadFoodItems}
+              >
                 View All
               </button>
             </div>
-
             <div className="stock-management-form-group">
               <label
                 className="stock-management-form-label"
@@ -365,11 +392,35 @@ const StockManagement = () => {
               <input
                 type="text"
                 className="stock-management-form-control"
-                id="itemName"
+                id="category"
+                value={searchCategoryName}
                 placeholder="Enter"
                 required
+                onChange={(e) => setSearchCategoryName(e.target.value)}
               />
             </div>
+            <button
+              className="stock-management-btn btn-outline item-btn"
+              onClick={handleSearch}
+            >
+              Search
+            </button>
+
+            {/* if searched item not found alert has popup */}
+            <Snackbar
+              open={alertPopup}
+              autoHideDuration={6000}
+              onClose={handleAlertClose}
+            >
+              <Alert
+                onClose={handleAlertClose}
+                severity="error"
+                sx={{ width: "100%" }}
+              >
+                {errorMsg}
+              </Alert>
+            </Snackbar>
+
             <div className="stock-management-item-grid">
               {foodItems.map((food) => (
                 <div key={food.itemId} className="stock-management-item-card">

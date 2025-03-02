@@ -6,7 +6,10 @@ import org.icet.crm.entity.FoodItemEntity;
 import org.icet.crm.repository.StockRepository;
 import org.icet.crm.service.StockService;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,8 +53,16 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public FoodItem searchItem(String itemName) {
-        return mapper.map(stockRepository.findByItemName(itemName), FoodItem.class);
+    public List<FoodItem> searchItem(String category) {
+        List<FoodItem> foodItemList = new ArrayList<>();
+        for (FoodItemEntity foodItemEntity : stockRepository.findByCategory(category)) {
+            foodItemList.add(mapper.map(foodItemEntity, FoodItem.class));
+        }
+
+        if(foodItemList.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Category Not Found : "+category);
+        }
+        return Collections.unmodifiableList(foodItemList);
     }
 
     @Override
