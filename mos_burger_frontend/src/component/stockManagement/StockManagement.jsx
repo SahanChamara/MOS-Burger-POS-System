@@ -15,6 +15,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 const StockManagement = () => {
   const fileInputRef = useRef(null);
 
+    // add the food Items
   const [foodItem, setFoodItem] = useState({
     itemName: "",
     category: "",
@@ -61,7 +62,6 @@ const StockManagement = () => {
     return imageUrl;
   };
 
-  // add the food tems
   const handleSubmit = async (event) => {
     event.preventDefault();
     const url = await handleImageUpload();
@@ -115,28 +115,22 @@ const StockManagement = () => {
     const { name, value } = e.target;
     setUpdatingFood((prevState) => ({
       ...prevState,
-      [name]: value, // Dynamically set the value of itemName
+      [name]: value, 
     }));
   };
 
-  // const [updatedFoods, setUpdatedFoods] = useState({
-  //   itemId: "",
-  //   itemName: "",
-  //   category: "",
-  //   price: "",
-  //   qtyOnHand: "",
-  //   itemDiscountPercentage: "",
-  //   expirationDate: "",
-  // });
-
-  // Calling the Update API
   const handleUpdateSubmission = async () => {
-    console.log(updatingFood);
+    await axios.put('http://localhost:8080/api/v1/stock/update',updatingFood)
+    .then(response => {
+      if(response.data === "Update Successful"){
+        loadFoodItems();
+      }
+    })
   };
 
   // MUI Dialog
   const [open, setOpen] = useState(false);
-  const [updatingFood, setUpdatingFood] = useState("");
+  const [updatingFood, setUpdatingFood] = useState({});
 
   const handleClickOpen = (updateFood) => {
     setUpdatingFood(updateFood);
@@ -436,12 +430,8 @@ const StockManagement = () => {
                 event.preventDefault();
                 const formData = new FormData(event.currentTarget);
                 const formJson = Object.fromEntries(formData.entries());
-                // const itemName = formJson.itemName;
                 console.log(formJson);
-                // setUpdatedFoods(formJson);
-
                 handleUpdateSubmission();
-
                 handleClose();
               },
             },
@@ -492,8 +482,8 @@ const StockManagement = () => {
               autoFocus
               required
               margin="dense"
-              id="qtyOnhand"
-              name="qtyOnhand"
+              id="qtyOnHand"
+              name="qtyOnHand"
               label="QTY On Hand"
               type="text"
               fullWidth

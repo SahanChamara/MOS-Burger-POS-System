@@ -46,10 +46,6 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public FoodItem updateItem(FoodItem foodItem) {
-        foodItem.setDeleted(false);
-        foodItem.setExpired(false);
-
         return mapper.map(stockRepository.save(mapper.map(foodItem, FoodItemEntity.class)), FoodItem.class);
-
     }
 }

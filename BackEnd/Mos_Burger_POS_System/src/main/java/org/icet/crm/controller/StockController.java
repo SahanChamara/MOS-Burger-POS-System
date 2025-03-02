@@ -37,8 +37,11 @@ public class StockController {
         return ResponseEntity.ok("Delete Failed");
     }
 
-//    @PutMapping("/update")
-//    public ResponseEntity<String> update(@RequestBody FoodItem foodItem){
-//
-//    }
+    @PutMapping("/update")
+    public ResponseEntity<String> update(@RequestBody FoodItem foodItem){
+        if(stockService.updateItem(foodItem)!=null){
+            return ResponseEntity.ok("Update Successful");
+        }
+        return ResponseEntity.ok("Update Failed");
+    }
 }
