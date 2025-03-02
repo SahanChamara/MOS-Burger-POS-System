@@ -265,6 +265,10 @@
     font-size: 0.9rem;
   }
 
+  .stock-management-custom-modal{
+    background-color: white !important;
+  }
+
   @media (max-width: 768px) {
     .stock-management-item-grid {
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));

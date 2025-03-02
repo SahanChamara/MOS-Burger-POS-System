@@ -20,7 +20,7 @@ public class StockServiceImpl implements StockService {
     private final ModelMapper mapper;
 
     @Override
-    public FoodItem additem(FoodItem foodItem) {
+    public FoodItem addItem(FoodItem foodItem) {
         foodItem.setDeleted(false);
         foodItem.setExpired(false);
         return mapper.map(stockRepository.save(mapper.map(foodItem, FoodItemEntity.class)), FoodItem.class);
@@ -42,5 +42,14 @@ public class StockServiceImpl implements StockService {
             stockRepository.save(foodItemEntity);
         });
         return true;
+    }
+
+    @Override
+    public FoodItem updateItem(FoodItem foodItem) {
+        foodItem.setDeleted(false);
+        foodItem.setExpired(false);
+
+        return mapper.map(stockRepository.save(mapper.map(foodItem, FoodItemEntity.class)), FoodItem.class);
+
     }
 }

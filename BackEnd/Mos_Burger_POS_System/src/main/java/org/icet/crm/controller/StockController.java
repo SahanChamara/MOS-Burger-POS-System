@@ -18,7 +18,7 @@ public class StockController {
 
     @PostMapping("/add")
     public ResponseEntity<String> addItem(@RequestBody FoodItem foodItem){
-         if(stockService.additem(foodItem)!=null){
+         if(stockService.addItem(foodItem)!=null){
              return ResponseEntity.ok("Item Added Successful");
          }
         return ResponseEntity.ok("Item Added Failed");
@@ -36,4 +36,9 @@ public class StockController {
         }
         return ResponseEntity.ok("Delete Failed");
     }
+
+//    @PutMapping("/update")
+//    public ResponseEntity<String> update(@RequestBody FoodItem foodItem){
+//
+//    }
 }

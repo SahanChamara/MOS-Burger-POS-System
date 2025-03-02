@@ -3,6 +3,15 @@ import "./StockManagement.css";
 import { supabase } from "../../config/supabaseClient";
 import axios from "axios";
 
+// MUI Component
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+
 const StockManagement = () => {
   const fileInputRef = useRef(null);
 
@@ -24,7 +33,6 @@ const StockManagement = () => {
   };
 
   const [image, setImage] = useState(null);
-  // const [imageUrl, setImageUrl] = useState("");
 
   const handleImage = (e) => {
     setImage(e.target.files[0]);
@@ -82,26 +90,62 @@ const StockManagement = () => {
   const loadFoodItems = async () => {
     await axios
       .get("http://localhost:8080/api/v1/stock/getAll")
-      .then(response => {
+      .then((response) => {
         console.log(response.data);
         setFoodItems(response.data);
       });
   };
 
   // Deleting Food item
-  // const [itemId,setItemId] = useState("");
+  const deleteFoodItem = async (itemId) => {
+    await axios
+      .delete(`http://localhost:8080/api/v1/stock/delete/${itemId}`)
+      .then((response) => {
+        if (response.data === "Delete Successful") {
+          setFoodItems(foodItems.filter((food) => food.itemId !== itemId));
+          alert("Delete Success");
+        } else {
+          alert("Delete Failed");
+        }
+      });
+  };
 
-  const deleteFoodItem = async (itemId) => {    
-    await axios.delete(`http://localhost:8080/api/v1/stock/delete/${itemId}`)
-    .then(response => {     
-      if(response.data === "Delete Successful"){
-        setFoodItems(foodItems.filter((food) => food.itemId !== itemId));
-        alert("Delete Success");        
-      }else {
-        alert("Delete Failed");
-      }
-    });
-  }
+  //Updating Food Items
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUpdatingFood((prevState) => ({
+      ...prevState,
+      [name]: value, // Dynamically set the value of itemName
+    }));
+  };
+
+  // const [updatedFoods, setUpdatedFoods] = useState({
+  //   itemId: "",
+  //   itemName: "",
+  //   category: "",
+  //   price: "",
+  //   qtyOnHand: "",
+  //   itemDiscountPercentage: "",
+  //   expirationDate: "",
+  // });
+
+  // Calling the Update API
+  const handleUpdateSubmission = async () => {
+    console.log(updatingFood);
+  };
+
+  // MUI Dialog
+  const [open, setOpen] = useState(false);
+  const [updatingFood, setUpdatingFood] = useState("");
+
+  const handleClickOpen = (updateFood) => {
+    setUpdatingFood(updateFood);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <div>
@@ -332,7 +376,6 @@ const StockManagement = () => {
                 required
               />
             </div>
-
             <div className="stock-management-item-grid">
               {foodItems.map((food) => (
                 <div key={food.itemId} className="stock-management-item-card">
@@ -345,17 +388,33 @@ const StockManagement = () => {
                     <div className="stock-management-item-name">
                       {food.itemName}
                     </div>
+                    <div className="stock-management-item-name">
+                      Category : {food.category}
+                    </div>
                     <div className="stock-management-item-price">
                       Rs.{food.price}
                     </div>
+                    <div className="stock-management-item-price">
+                      EXP Date : {food.expirationDate}
+                    </div>
+                    {/* <div className="stock-management-item-price">
+                      Discount : {food.itemDiscountPercentage}%
+                    </div>                     */}
                     <span className="stock-management-item-stock">
                       In Stock: {food.qtyOnHand}
                     </span>
                     <div className="stock-management-item-actions">
-                      <button className="stock-management-btn btn-outline item-btn">
+                      <button
+                        className="stock-management-btn btn-outline item-btn"
+                        onClick={() => handleClickOpen(food)}
+                      >
                         Edit
                       </button>
-                      <button className="stock-management-btn btn-primary item-btn" onClick={() => deleteFoodItem(food.itemId)}>
+
+                      <button
+                        className="stock-management-btn btn-primary item-btn"
+                        onClick={() => deleteFoodItem(food.itemId)}
+                      >
                         Delete
                       </button>
                     </div>
@@ -365,6 +424,128 @@ const StockManagement = () => {
             </div>
           </div>
         </div>
+
+        {/* MUI Dialog */}
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          slotProps={{
+            paper: {
+              component: "form",
+              onSubmit: (event) => {
+                event.preventDefault();
+                const formData = new FormData(event.currentTarget);
+                const formJson = Object.fromEntries(formData.entries());
+                // const itemName = formJson.itemName;
+                console.log(formJson);
+                // setUpdatedFoods(formJson);
+
+                handleUpdateSubmission();
+
+                handleClose();
+              },
+            },
+          }}
+        >
+          <DialogTitle>Update Food Item</DialogTitle>
+          <DialogContent>
+            <DialogContentText>Update the Food Item</DialogContentText>
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="itemId"
+              name="itemId"
+              label="Item ID"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={updatingFood.itemId}
+            />
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="itemName"
+              name="itemName"
+              label="Item Name"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={updatingFood.itemName}
+              onChange={handleInputChange}
+            />
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="price"
+              name="price"
+              label="Price"
+              type="number"
+              fullWidth
+              variant="standard"
+              value={updatingFood.price}
+              onChange={handleInputChange}
+            />
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="qtyOnhand"
+              name="qtyOnhand"
+              label="QTY On Hand"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={updatingFood.qtyOnHand}
+              onChange={handleInputChange}
+            />
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="category"
+              name="category"
+              label="Category"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={updatingFood.category}
+              onChange={handleInputChange}
+            />
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="expirationDate"
+              name="expirationDate"
+              label="Expiration Date"
+              type="date"
+              fullWidth
+              variant="standard"
+              value={updatingFood.expirationDate}
+              onChange={handleInputChange}
+            />
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="itemDiscountPercentage"
+              name="itemDiscountPercentage"
+              label="Discount"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={updatingFood.itemDiscountPercentage}
+              onChange={handleInputChange}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button type="submit">Update</Button>
+          </DialogActions>
+        </Dialog>
 
         <div className="stock-management-footer">
           MOS Burger Store Management System © 2025
