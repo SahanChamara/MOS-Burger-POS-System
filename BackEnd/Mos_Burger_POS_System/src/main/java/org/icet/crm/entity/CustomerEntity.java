@@ -21,6 +21,8 @@ public class CustomerEntity {
     private String name;
     private String contactNumber;
     private Integer totalOrders;
+
+    @Column(name = "is_deleted",columnDefinition = "TINYINT(1)",nullable = false)
     private boolean isDeleted;
 
     @OneToMany(mappedBy = "customer")
