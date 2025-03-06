@@ -26,9 +26,20 @@ public class StockController {
     }
 
     @GetMapping("/getAll")
-    public List<FoodItem> getAllFoodItems(){
-        return stockService.getAllFoodItems();
+    public ResponseEntity<List<FoodItem>> getAllFoodItems(){
+        List<FoodItem> allFoodItems = stockService.getAllFoodItems();
+        return allFoodItems.isEmpty()
+                ? ResponseEntity.notFound().build()
+                : ResponseEntity.ok(allFoodItems);
     }
+
+/*    @GetMapping("/getFoodItemsDetail")
+    public ResponseEntity<List<FoodItem>> getFoodItemsDetail(){
+        List<FoodItem> foodItemList = stockService.foodItemDetails();
+        return foodItemList.isEmpty()
+                ? ResponseEntity.notFound().build()
+                : ResponseEntity.ok(foodItemList);
+    }*/
 
     @DeleteMapping("/delete/{itemId}")
     public ResponseEntity<String> delete(@PathVariable Integer itemId){

@@ -59,8 +59,8 @@ public class StockServiceImpl implements StockService {
             foodItemList.add(mapper.map(foodItemEntity, FoodItem.class));
         }
 
-        if(foodItemList.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Category Not Found : "+category);
+        if (foodItemList.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category Not Found : " + category);
         }
         return Collections.unmodifiableList(foodItemList);
     }
@@ -69,4 +69,14 @@ public class StockServiceImpl implements StockService {
     public FoodItem searchById(Integer itemId) {
         return mapper.map(stockRepository.findById(itemId), FoodItem.class);
     }
+
+    /*@Override
+    public List<FoodItem> foodItemDetails() {
+        return stockRepository.findFoodItemDetails()
+                .stream()
+                .map(foodItemEntity -> mapper.map(foodItemEntity, FoodItem.class))
+                .toList();
+    }*/
+
+
 }

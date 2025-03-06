@@ -13,4 +13,7 @@ public interface StockRepository extends JpaRepository<FoodItemEntity,Integer> {
 
     List<FoodItemEntity> findByCategory(String category);
 
+    /*@Query(value = "SELECT item_id, item_name,category,price,image_path FROM food_item  WHERE is_deleted=false",nativeQuery = true)
+    List<FoodItemEntity> findFoodItemDetails();*/
+
 }

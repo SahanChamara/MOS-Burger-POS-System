@@ -38,11 +38,11 @@ const PlaceOrderPage = () => {
   // customer select drop down
   const [selectedCustomer, setSelectedCustomer] = useState("");
   const [customers, setCustomers] = useState([
-    { id: 1, name: "John Smith", phone: "555-1234" },
-    { id: 2, name: "Sarah Johnson", phone: "555-5678" },
-    { id: 3, name: "Michael Brown", phone: "555-9012" },
-    { id: 4, name: "Emily Davis", phone: "555-3456" },
-    { id: 5, name: "David Wilson", phone: "555-7890" },
+    {
+      id: "",
+      name: "",
+      phone: "",
+    },
   ]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -50,29 +50,68 @@ const PlaceOrderPage = () => {
   const filteredCustomers = customers.filter(
     (customer) =>
       customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      customer.phone.includes(searchTerm)
+      customer.contactNumber.includes(searchTerm)
   );
 
   const handleCustomerSelect = (customer) => {
     setSelectedCustomer(customer);
     setIsDropdownOpen(false);
     setSearchTerm("");
+    console.log(customer);
   };
 
-  // Handle Item Card Clicking
-  let foodItemArr = [];
+  // load Customer Details for DropDown
+  const loadAllCustomers = async () => {
+    await axios
+      .get("http://localhost:8080/api/v1/customer/getAll")
+      .then((response) => {
+        setCustomers(response.data);
+      });
+  };
+
+  useEffect(() => {
+    loadAllCustomers();
+  }, []);
+
+  // Handle Item Card Clicking and adding the Cart
+  const [foodItemArr, setFoodItemArr] = useState([]);
+  const [qtyChanging, setQtyChanging] = useState(0);
+  const [incrementQty, setIncrementQty] = useState(0);
+  const [decrementQty, setdecrementQty] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const handleclickItem = (clickedFoodItem) => {
-    console.log(clickedFoodItem);
+    const index = foodItemArr.findIndex(
+      (item) => item.itemId === clickedFoodItem.itemId
+    );
 
-    foodItemArr.push(clickedFoodItem);    
+    if (index >= 0) {
+      setQtyChanging(foodItemArr[index].qty++);
+      console.log(qtyChanging);
+    } else {
+      const selectedFoodItem = {
+        itemId: clickedFoodItem.itemId,
+        itemName: clickedFoodItem.itemName,
+        price: clickedFoodItem.price,
+        discount: clickedFoodItem.itemDiscountPercentage,
+        qty: 1,
+      };
+      setFoodItemArr((previusItems) => [...previusItems, selectedFoodItem]);
+    }
+  };
 
+  // i use this useEffect to updating price immedietly an fooditemarray changing...
+  useEffect(() => {
+    const totalP = foodItemArr
+      .reduce((total, item) => total + item.price*item.qty, 0);
+    setTotalPrice(totalP);
+  }, [foodItemArr]);
+
+  // this use effect used for debug purpose only...
+  useEffect(() => {
     console.log(foodItemArr);
-
-    foodItemArr.filter((food) => food.itemId === clickedFoodItem.itemId)
-    
-    
-  } 
+    console.log(totalPrice);
+  }, [foodItemArr, totalPrice]);
 
   return (
     <div>
@@ -135,7 +174,11 @@ const PlaceOrderPage = () => {
 
           <section className="place-order-items-grid">
             {foodItems.map((food) => (
-              <div key={food.itemId} className="place-order-item-card" onClick={() => handleclickItem(food)}>
+              <div
+                key={food.itemId}
+                className="place-order-item-card"
+                onClick={() => handleclickItem(food)}
+              >
                 <div>
                   {" "}
                   <img
@@ -156,7 +199,7 @@ const PlaceOrderPage = () => {
           <aside className="place-order-cart-container">
             <div className="place-order-customer-selection">
               <div className="place-order-cart-header">
-                Current Order
+                CART
                 <div className="place-order-customer-dropdown-container">
                   <div
                     className="place-order-selected-customer"
@@ -188,14 +231,15 @@ const PlaceOrderPage = () => {
                         {filteredCustomers.length > 0 ? (
                           filteredCustomers.map((customer) => (
                             <div
-                              key={customer.id}
+                              key={customer.customerId}
                               className="place-order-customer-item"
-                              onClick={() => handleCustomerSelect(customer)}>
+                              onClick={() => handleCustomerSelect(customer)}
+                            >
                               <div className="place-order-customer-name">
                                 {customer.name}
                               </div>
                               <div className="place-order-customer-phone">
-                                {customer.phone}
+                                {customer.contactNumber}
                               </div>
                             </div>
                           ))
@@ -218,39 +262,22 @@ const PlaceOrderPage = () => {
               Current Order - We Can include the customer select option for this
             </div> */}
             <div className="place-order-cart-items">
-              <div className="place-order-cart-item">
-                <div className="place-order-cart-item-details">
-                  <div>Classic Burger</div>
-                  <div>Rs. 450</div>
+              {foodItemArr.map((cartAddingFoodItem) => (
+                <div
+                  key={cartAddingFoodItem.itemId}
+                  className="place-order-cart-item"
+                >
+                  <div className="place-order-cart-item-details">
+                    <div>{cartAddingFoodItem.itemName}</div>
+                    <div>Rs. {cartAddingFoodItem.price}</div>
+                  </div>
+                  <div className="place-order-cart-item-actions">
+                    <button className="place-order-quantity-btn">-</button>
+                    <span>{cartAddingFoodItem.qty}</span>
+                    <button className="place-order-quantity-btn">+</button>
+                  </div>
                 </div>
-                <div className="place-order-cart-item-actions">
-                  <button className="place-order-quantity-btn">-</button>
-                  <span>1</span>
-                  <button className="place-order-quantity-btn">+</button>
-                </div>
-              </div>
-              <div className="place-order-cart-item">
-                <div className="place-order-cart-item-details">
-                  <div>Classic Burger</div>
-                  <div>Rs. 450</div>
-                </div>
-                <div className="place-order-cart-item-actions">
-                  <button className="place-order-quantity-btn">-</button>
-                  <span>1</span>
-                  <button className="place-order-quantity-btn">+</button>
-                </div>
-              </div>
-              <div className="place-order-cart-item">
-                <div className="place-order-cart-item-details">
-                  <div>Classic Burger</div>
-                  <div>Rs. 450</div>
-                </div>
-                <div className="place-order-cart-item-actions">
-                  <button className="place-order-quantity-btn">-</button>
-                  <span>1</span>
-                  <button className="place-order-quantity-btn">+</button>
-                </div>
-              </div>
+              ))}
             </div>
             <div className="place-order-cart-summary">
               <div className="place-order-total-amount">
@@ -259,7 +286,7 @@ const PlaceOrderPage = () => {
               </div>
               <div className="place-order-total-amount">
                 <span>Total Amount:</span>
-                <span>Rs. 450</span>
+                <span>Rs. {totalPrice}</span>
               </div>
               <div className="place-order-payment-input">
                 <input type="number" placeholder="Enter cash amount" />
