@@ -105,13 +105,26 @@ const PlaceOrderPage = () => {
     const totalP = foodItemArr
       .reduce((total, item) => total + item.price*item.qty, 0);
     setTotalPrice(totalP);
-  }, [foodItemArr]);
+  }, [foodItemArr,qtyChanging]);
 
   // this use effect used for debug purpose only...
   useEffect(() => {
     console.log(foodItemArr);
     console.log(totalPrice);
   }, [foodItemArr, totalPrice]);
+
+  // Setting the Order ID
+  const [orderId, setOrderId] = useState(0);
+  const getLastOrderId = async () => {
+    await axios.get('http://localhost:8080/api/v1/placeOrder/lastOrderId')
+    .then(response => {
+      setOrderId(response.data);   
+    });
+  }
+
+  useEffect(() => {
+    getLastOrderId();    
+  },[]);
 
   return (
     <div>
@@ -199,7 +212,7 @@ const PlaceOrderPage = () => {
           <aside className="place-order-cart-container">
             <div className="place-order-customer-selection">
               <div className="place-order-cart-header">
-                CART
+                Order ID : {orderId}
                 <div className="place-order-customer-dropdown-container">
                   <div
                     className="place-order-selected-customer"
