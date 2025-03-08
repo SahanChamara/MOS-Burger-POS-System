@@ -21,15 +21,12 @@ const SignIn = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    console.log(user);
-    
-
     await axios.post('http://localhost:8080/api/v1/login',user)
     .then(response => {
-      if(response.data==="Found"){
+      if(response.data==="Login Successful"){
           navigate('/home');
       }else {
-        setErorMsg("Unauthorized Access");
+        setErorMsg("Unauthorized Access - User Name or Password Not Found");
       }
     })    
   };

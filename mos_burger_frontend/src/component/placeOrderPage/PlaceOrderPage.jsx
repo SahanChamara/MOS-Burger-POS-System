@@ -79,6 +79,7 @@ const PlaceOrderPage = () => {
   const [incrementQty, setIncrementQty] = useState(0);
   const [decrementQty, setdecrementQty] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [totalDiscount, setTotaDiscuont] = useState(0);
 
   const handleclickItem = (clickedFoodItem) => {
     const index = foodItemArr.findIndex(
@@ -102,9 +103,10 @@ const PlaceOrderPage = () => {
 
   // i use this useEffect to updating price immedietly an fooditemarray changing...
   useEffect(() => {
-    const totalP = foodItemArr
-      .reduce((total, item) => total + item.price*item.qty, 0);
+    const totalP = foodItemArr.reduce((total, item) => total + item.price*item.qty, 0);
+    const discount = foodItemArr.reduce((itemDiscount,item) => itemDiscount + item.discount,0);      
     setTotalPrice(totalP);
+    setTotaDiscuont(discount);
   }, [foodItemArr,qtyChanging]);
 
   // this use effect used for debug purpose only...
@@ -295,7 +297,7 @@ const PlaceOrderPage = () => {
             <div className="place-order-cart-summary">
               <div className="place-order-total-amount">
                 <span>Discount:</span>
-                <span>Rs. 50</span>
+                <span>Rs. {totalDiscount}</span>
               </div>
               <div className="place-order-total-amount">
                 <span>Total Amount:</span>

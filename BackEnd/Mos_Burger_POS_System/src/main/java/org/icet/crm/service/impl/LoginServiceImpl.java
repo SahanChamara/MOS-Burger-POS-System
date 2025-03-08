@@ -16,12 +16,12 @@ public class LoginServiceImpl implements LoginService {
     private final ModelMapper mapper;
 
     @Override
-    public User authorizedUser(User user) {
+    public String authorizedUser(User user) {
         UserEntity userEntity = loginRepository.findByEmail(user.getEmail());
         if(userEntity!=null){
-            return mapper.map(userEntity, User.class);
+           return userEntity.getPassword().equals(user.getPassword()) ? "Success" : "Failed";
         }
-        return null;
+        return "User Not Found";
     }
 
     @Override

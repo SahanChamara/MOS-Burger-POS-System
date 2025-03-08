@@ -17,11 +17,13 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody User user){
-        if(loginService.authorizedUser(user)!=null){
+        /*if(loginService.authorizedUser(user)!=null){
 //            return ResponseEntity.status(HttpStatus.FOUND).build();
             return ResponseEntity.ok("Found");
         }
 //        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        return ResponseEntity.ok("Not Found");
+        return ResponseEntity.ok("Not Found");*/
+
+        return loginService.authorizedUser(user).equals("Success") ? ResponseEntity.ok("Login Successful") : ResponseEntity.ok("Login Failed");
     }
 }
