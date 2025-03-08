@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.icet.crm.entity.FoodItemEntity;
+import org.icet.crm.entity.OrderEntity;
 
 @Data
 @NoArgsConstructor
@@ -13,5 +15,7 @@ public class OrderDetail {
     private Integer quantity;
     private Double unitPrice;
     private Double subTotal;
+    private OrderEntity order;
+    private FoodItemEntity foodItem;
 
 }

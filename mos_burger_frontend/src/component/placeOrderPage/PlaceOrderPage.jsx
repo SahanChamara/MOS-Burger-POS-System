@@ -87,15 +87,21 @@ const PlaceOrderPage = () => {
     );
 
     if (index >= 0) {
-      setQtyChanging(foodItemArr[index].qty++);
+      setQtyChanging(foodItemArr[index].quantity++);
       console.log(qtyChanging);
     } else {
       const selectedFoodItem = {
         itemId: clickedFoodItem.itemId,
         itemName: clickedFoodItem.itemName,
-        price: clickedFoodItem.price,
+        unitPrice: clickedFoodItem.price,
         discount: clickedFoodItem.itemDiscountPercentage,
-        qty: 1,
+        quantity: 1,
+        order:{
+          orderId:orderId
+        },
+        foodItem:{
+          itemId:clickedFoodItem.itemId
+        }
       };
       setFoodItemArr((previusItems) => [...previusItems, selectedFoodItem]);
     }
@@ -103,7 +109,7 @@ const PlaceOrderPage = () => {
 
   // i use this useEffect to updating price immedietly an fooditemarray changing...
   useEffect(() => {
-    const totalP = foodItemArr.reduce((total, item) => total + item.price*item.qty, 0);
+    const totalP = foodItemArr.reduce((total, item) => total + item.unitPrice*item.quantity, 0);
     const discount = foodItemArr.reduce((itemDiscount,item) => itemDiscount + item.discount,0);      
     setTotalPrice(totalP);
     setTotaDiscuont(discount);
@@ -137,26 +143,34 @@ const PlaceOrderPage = () => {
     finalAmount:0,
     discountPercentage:0,
     customer:{},
-    orderDetailList:[]
+    orderDetails:[]
   })
 
   const handlePlacingOrder = () => {
     setOrder({
-      orderId: orderId,
+      //orderId: orderId,      
       totalAmount: totalPrice,
       discountPercentage:totalDiscount,
       customer: selectedCustomer,
-      orderDetailList: foodItemArr
+      orderDetails: foodItemArr,
+      orderDate:"2025-03-09"
     });
-    console.log(order);    
-
-    handlePlaceOrderAPI();
   }
 
+  useEffect(() => {
+    console.log(order);  
+    
+    if(order.orderDate){
+      handlePlaceOrderAPI();
+    }
+  },[order])
+
   const handlePlaceOrderAPI = async () => {
+    console.log("api pass oder objetc : ",order);
+    
     await axios.post("http://localhost:8080/api/v1/placeOrder/place",order)
     .then(response => {
-      console.log(response.data);      
+      console.log(response.data);  
     })
   }
 
@@ -316,11 +330,11 @@ const PlaceOrderPage = () => {
                 >
                   <div className="place-order-cart-item-details">
                     <div>{cartAddingFoodItem.itemName}</div>
-                    <div>Rs. {cartAddingFoodItem.price}</div>
+                    <div>Rs. {cartAddingFoodItem.unitPrice}</div>
                   </div>
                   <div className="place-order-cart-item-actions">
                     <button className="place-order-quantity-btn">-</button>
-                    <span>{cartAddingFoodItem.qty}</span>
+                    <span>{cartAddingFoodItem.quantity}</span>
                     <button className="place-order-quantity-btn">+</button>
                   </div>
                 </div>

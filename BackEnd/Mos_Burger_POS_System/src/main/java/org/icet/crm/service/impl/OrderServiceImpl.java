@@ -8,6 +8,7 @@ import org.icet.crm.entity.CustomerEntity;
 import org.icet.crm.entity.OrderDetailEntity;
 import org.icet.crm.entity.OrderEntity;
 import org.icet.crm.repository.OrderRepository;
+import org.icet.crm.service.OrderDetailService;
 import org.icet.crm.service.OrderService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
+    private final OrderDetailService orderDetailService;
     private final ModelMapper mapper;
 
 
@@ -35,11 +37,12 @@ public class OrderServiceImpl implements OrderService {
 
         ArrayList<OrderDetailEntity> orderDetailEntityArrayList = new ArrayList<>();
 
-        for (OrderDetail orderDetail : order.getOrderDetailList()) {
+        for (OrderDetail orderDetail : order.getOrderDetails()) {
             orderDetailEntityArrayList.add(mapper.map(orderDetail, OrderDetailEntity.class));
         }
 
         OrderEntity orderEntity = new OrderEntity();
+
         orderEntity.setOrderId(order.getOrderId());
         orderEntity.setOrderDate(order.getOrderDate());
         orderEntity.setTotalAmount(totalAmount);
@@ -48,8 +51,14 @@ public class OrderServiceImpl implements OrderService {
         orderEntity.setCustomer(mapper.map(order.getCustomer(), CustomerEntity.class));
         orderEntity.setOrderDetails(orderDetailEntityArrayList);
 
+        System.out.println("Order entity "+orderEntity);
+
         OrderEntity savedOrder = orderRepository.save(orderEntity);
-        return savedOrder != null;
+        System.out.println("saved Entity : "+ savedOrder);
+        if(savedOrder != null){
+            return orderDetailService.addOrderDetails(order.getOrderDetails());
+        }
+        return false;
     }
 
     @Override

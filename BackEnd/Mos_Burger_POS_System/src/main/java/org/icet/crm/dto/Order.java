@@ -18,5 +18,5 @@ public class Order {
     private Double finalAmount;
     private Double discountPercentage;
     private Customer customer;
-    private List<OrderDetail> orderDetailList;
+    private List<OrderDetail> orderDetails;
 }
