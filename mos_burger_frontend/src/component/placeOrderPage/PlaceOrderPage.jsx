@@ -128,6 +128,38 @@ const PlaceOrderPage = () => {
     getLastOrderId();    
   },[]);
 
+
+  // Place Order
+  const [order, setOrder] = useState({
+    orderId:"",
+    orderDate: "",
+    totalAmount:0,
+    finalAmount:0,
+    discountPercentage:0,
+    customer:{},
+    orderDetailList:[]
+  })
+
+  const handlePlacingOrder = () => {
+    setOrder({
+      orderId: orderId,
+      totalAmount: totalPrice,
+      discountPercentage:totalDiscount,
+      customer: selectedCustomer,
+      orderDetailList: foodItemArr
+    });
+    console.log(order);    
+
+    handlePlaceOrderAPI();
+  }
+
+  const handlePlaceOrderAPI = async () => {
+    await axios.post("http://localhost:8080/api/v1/placeOrder/place",order)
+    .then(response => {
+      console.log(response.data);      
+    })
+  }
+
   return (
     <div>
       <div className="place-order-body">
@@ -306,7 +338,7 @@ const PlaceOrderPage = () => {
               <div className="place-order-payment-input">
                 <input type="number" placeholder="Enter cash amount" />
               </div>
-              <button className="place-order-print-btn">Place Order</button>
+              <button className="place-order-print-btn" onClick={handlePlacingOrder}>Place Order</button>
             </div>
           </aside>
         </main>
