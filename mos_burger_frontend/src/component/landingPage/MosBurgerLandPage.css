@@ -49,18 +49,20 @@
 
 .land-page-nav-links {
     display: flex;
-    gap: 2rem;
+    gap: 5rem;
     list-style: none;
+    
 }
 
-.land-page-nav-links a {
+.land-page-nav-links p {
     color: var(--text-light);
     text-decoration: none;
     font-weight: 500;
     transition: color 0.3s ease;
+    cursor: pointer;
 }
 
-.land-page-nav-links a:hover {
+.land-page-nav-links p:hover {
     color: var(--primary);
 }
 

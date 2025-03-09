@@ -8,6 +8,7 @@ import StockManagement from "./component/stockManagement/StockManagement";
 function App() {
   return (
     <div className="App">
+      
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<SignIn />} />

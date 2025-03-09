@@ -17,20 +17,20 @@ const MosBurgerLandPage = () => {
           <nav>
             <ul className="land-page-nav-links">
               <li>
-                <a href="#home">Home</a>
+              <p onClick={()=> navigate('/home')}>Home</p>
               </li>
               <li>
-                <a href="#menu">Menu</a>
+              <p onClick={()=> navigate('/stock')}>Stock Management</p>
               </li>
               <li>
-                <a href="#about">About</a>
+              <p onClick={()=> navigate('/placeOrder')}>Place Order</p>
               </li>
               <li>
-                <a href="#contact">Contact</a>
+              <p onClick={()=> navigate('/customer')}>Customer Management</p>
               </li>
             </ul>
           </nav>
-          <button className="land-page-btn-cashier">Cashier Login</button>
+          <button className="land-page-btn-cashier" onClick={() => {navigate("/")}}>Logout</button>
         </header>
 
         <section className="land-page-hero">

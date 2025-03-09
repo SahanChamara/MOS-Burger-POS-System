@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./PlaceOrderPage.css";
 import axios from "axios";
+import Navbar from "../navbar/navbar";
 
 const PlaceOrderPage = () => {
   // Load All Food Items
@@ -175,7 +176,8 @@ const PlaceOrderPage = () => {
   }
 
   return (
-    <div>
+    
+    <div>      
       <div className="place-order-body">
         <header className="place-order-header">
           <div className="place-order-logo">MOS BURGER</div>
@@ -185,6 +187,7 @@ const PlaceOrderPage = () => {
               <input type="text" placeholder="Search menu items..." />
             </div>
           </div>
+          <Navbar/>
         </header>
 
         <main className="place-order-main-container">

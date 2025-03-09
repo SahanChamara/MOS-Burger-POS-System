@@ -13,6 +13,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
 import { Alert, Snackbar } from "@mui/material";
+import Navbar from "../navbar/navbar";
 
 const StockManagement = () => {
   const fileInputRef = useRef(null);
@@ -195,6 +196,7 @@ const StockManagement = () => {
             </svg>
             <h1>MOS Burger Store Management</h1>
           </div>
+          <Navbar/>
         </div>
 
         <div className="stock-management-container">
