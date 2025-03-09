@@ -1,7 +1,9 @@
 package org.icet.crm.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.icet.crm.dto.FoodItem;
+import org.icet.crm.dto.OrderDetail;
 import org.icet.crm.entity.FoodItemEntity;
 import org.icet.crm.repository.StockRepository;
 import org.icet.crm.service.StockService;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class StockServiceImpl implements StockService {
     private final StockRepository stockRepository;
     private final ModelMapper mapper;
@@ -68,6 +71,21 @@ public class StockServiceImpl implements StockService {
     @Override
     public FoodItem searchById(Integer itemId) {
         return mapper.map(stockRepository.findById(itemId), FoodItem.class);
+    }
+
+    @Override
+    public boolean updateFoodItemQty(List<OrderDetail> orderDetailList) {
+        for (OrderDetail orderDetail : orderDetailList) {
+            if(!updateFoodItemQty(orderDetail)){
+                return false;
+            }
+        }
+        return !orderDetailList.isEmpty();
+    }
+
+    @Override
+    public boolean updateFoodItemQty(OrderDetail orderDetail) {
+        return stockRepository.updateQtyOnHand(orderDetail.getFoodItem().getItemId(), orderDetail.getQuantity())>0;
     }
 
     /*@Override

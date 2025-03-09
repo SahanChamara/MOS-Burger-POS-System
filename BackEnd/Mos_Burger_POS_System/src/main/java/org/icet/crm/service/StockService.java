@@ -1,6 +1,7 @@
 package org.icet.crm.service;
 
 import org.icet.crm.dto.FoodItem;
+import org.icet.crm.dto.OrderDetail;
 
 import java.util.List;
 
@@ -11,4 +12,7 @@ public interface StockService {
     FoodItem updateItem(FoodItem foodItem);
     List<FoodItem> searchItem(String category);
     FoodItem searchById(Integer itemId);
+
+    boolean updateFoodItemQty(List<OrderDetail> orderDetailList);
+    boolean updateFoodItemQty(OrderDetail orderDetail);
 }

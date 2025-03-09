@@ -10,6 +10,7 @@ import org.icet.crm.entity.OrderEntity;
 import org.icet.crm.repository.OrderRepository;
 import org.icet.crm.service.OrderDetailService;
 import org.icet.crm.service.OrderService;
+import org.icet.crm.service.StockService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,8 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderDetailService orderDetailService;
+    /*private final FoodItemService foodItemService;*/
+    private final StockService stockService;
     private final ModelMapper mapper;
 
 
@@ -33,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
 
         //calculation Final Amount
         double discountPrice = totalAmount * order.getDiscountPercentage() / 100;
-        double finalAmount = totalAmount-discountPrice;
+        double finalAmount = totalAmount - discountPrice;
 
         ArrayList<OrderDetailEntity> orderDetailEntityArrayList = new ArrayList<>();
 
@@ -51,18 +54,18 @@ public class OrderServiceImpl implements OrderService {
         orderEntity.setCustomer(mapper.map(order.getCustomer(), CustomerEntity.class));
         orderEntity.setOrderDetails(orderDetailEntityArrayList);
 
-        System.out.println("Order entity "+orderEntity);
+        System.out.println("Order entity " + orderEntity);
 
         OrderEntity savedOrder = orderRepository.save(orderEntity);
-        System.out.println("saved Entity : "+ savedOrder);
-        if(savedOrder != null){
-            return orderDetailService.addOrderDetails(order.getOrderDetails());
+        System.out.println("saved Entity : " + savedOrder);
+        if (savedOrder != null && orderDetailService.addOrderDetails(order.getOrderDetails())) {
+            return stockService.updateFoodItemQty(order.getOrderDetails());
         }
         return false;
     }
 
     @Override
     public Integer getLastOrderId() {
-        return orderRepository.findLastOrderId()+1;
+        return orderRepository.findLastOrderId() + 1;
     }
 }
