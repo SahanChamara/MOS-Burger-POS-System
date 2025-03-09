@@ -111,6 +111,7 @@
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     transition: transform 0.3s ease;
+    
 }
 
 .place-order-item-card:hover {
@@ -134,6 +135,10 @@
 
 .place-order-item-price {
     color: var(--primary-color);
+    font-weight: bold;
+}
+.place-order-item-qty {
+    color: black;
     font-weight: bold;
 }
 
@@ -186,6 +191,19 @@
     cursor: pointer;
 }
 
+.place-order-quantity-btn-close{
+/*     position: relative;
+    top: -1.7rem;
+    left: 18rem; */
+    background-color: red;
+    border: none;    
+    width: 25px;
+    height: 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+}
+
 .place-order-cart-summary {
     padding: 1rem;
     border-top: 1px solid #ddd;
@@ -225,9 +243,6 @@
 .place-order-print-btn:hover {
     background-color: #c0392b;
 }
-
-
-
 
 
 

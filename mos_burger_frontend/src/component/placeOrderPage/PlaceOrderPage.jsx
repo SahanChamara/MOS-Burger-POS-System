@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./PlaceOrderPage.css";
 import axios from "axios";
 import Navbar from "../navbar/navbar";
+import { Alert, Snackbar, Button } from "@mui/material";
 
 const PlaceOrderPage = () => {
   // Load All Food Items
@@ -97,12 +98,12 @@ const PlaceOrderPage = () => {
         unitPrice: clickedFoodItem.price,
         discount: clickedFoodItem.itemDiscountPercentage,
         quantity: 1,
-        order:{
-          orderId:orderId
+        order: {
+          orderId: orderId,
         },
-        foodItem:{
-          itemId:clickedFoodItem.itemId
-        }
+        foodItem: {
+          itemId: clickedFoodItem.itemId,
+        },
       };
       setFoodItemArr((previusItems) => [...previusItems, selectedFoodItem]);
     }
@@ -110,11 +111,22 @@ const PlaceOrderPage = () => {
 
   // i use this useEffect to updating price immedietly an fooditemarray changing...
   useEffect(() => {
-    const totalP = foodItemArr.reduce((total, item) => total + item.unitPrice*item.quantity, 0);
-    const discount = foodItemArr.reduce((itemDiscount,item) => itemDiscount + item.discount,0);      
+    const totalP = foodItemArr.reduce(
+      (total, item) => total + item.unitPrice * item.quantity,
+      0
+    );
+    const discount = foodItemArr.reduce(
+      (itemDiscount, item) => itemDiscount + item.discount,
+      0
+    );
     setTotalPrice(totalP);
     setTotaDiscuont(discount);
-  }, [foodItemArr,qtyChanging]);
+  }, [foodItemArr, qtyChanging]);
+
+  // Remove Cart Item
+  const handleRemove = (CartAddedFoodItem) => {    
+    setFoodItemArr((prevItems) => prevItems.filter((foodItem) => foodItem.itemId !== CartAddedFoodItem.itemId));
+  }
 
   // this use effect used for debug purpose only...
   useEffect(() => {
@@ -125,69 +137,102 @@ const PlaceOrderPage = () => {
   // Setting the Order ID
   const [orderId, setOrderId] = useState(0);
   const getLastOrderId = async () => {
-    await axios.get('http://localhost:8080/api/v1/placeOrder/lastOrderId')
-    .then(response => {
-      setOrderId(response.data);   
-    });
-  }
+    await axios
+      .get("http://localhost:8080/api/v1/placeOrder/lastOrderId")
+      .then((response) => {
+        setOrderId(response.data);
+      });
+  };
 
   useEffect(() => {
-    getLastOrderId();    
-  },[]);
-
+    getLastOrderId();
+  }, []);
 
   // Place Order
   const [order, setOrder] = useState({
-    orderId:"",
+    orderId: "",
     orderDate: "",
-    totalAmount:0,
-    finalAmount:0,
-    discountPercentage:0,
-    customer:{},
-    orderDetails:[]
-  })
+    totalAmount: 0,
+    finalAmount: 0,
+    discountPercentage: 0,
+    customer: {},
+    orderDetails: [],
+  });
+
+  //Place Order Alert
+  // const [alert, setAlert] = useState("");
+
+  const [alertPopup, setAlertPopup] = useState(false);
+  const handleClose = () => setAlertPopup(false);
 
   const handlePlacingOrder = () => {
     setOrder({
-      //orderId: orderId,      
+      //orderId: orderId,
       totalAmount: totalPrice,
-      discountPercentage:totalDiscount,
+      discountPercentage: totalDiscount,
       customer: selectedCustomer,
       orderDetails: foodItemArr,
-      orderDate:"2025-03-09"
+      orderDate: "2025-03-09",
     });
-  }
+  };
 
   useEffect(() => {
-    console.log(order);  
-    
-    if(order.orderDate){
+    console.log(order);
+
+    if (order.orderDate) {
       handlePlaceOrderAPI();
     }
-  },[order])
+  }, [order]);
 
   const handlePlaceOrderAPI = async () => {
-    console.log("api pass oder objetc : ",order);
-    
-    await axios.post("http://localhost:8080/api/v1/placeOrder/place",order)
-    .then(response => {
-      console.log(response.data);  
-    })
-  }
+    console.log("api pass oder objetc : ", order);
+
+    await axios
+      .post("http://localhost:8080/api/v1/placeOrder/place", order)
+      .then((response) => {
+        if (response.data === "success") {
+          setAlertPopup(true);
+          setFoodItemArr([]);
+          getLastOrderId();
+        }
+      });
+  };
+
+  //Search Food Item
+  const [searchFoodItem, setSearchFoodItem] = useState("");
+
+  // i use this filterFoodItem state to dynamically chaneg the loeded food item for user search a item
+  const [filterFoodItem, setFilterFoodItem] = useState(foodItems);
+
+  useEffect(() => {
+    if (searchFoodItem.trim() === "") {
+      setFilterFoodItem(foodItems);
+    } else {
+      setFilterFoodItem(
+        foodItems.filter((foodItem) =>
+          foodItem.itemName.toLowerCase().includes(searchFoodItem.toLowerCase())
+        )
+      );
+    }
+  }, [searchFoodItem, foodItems]);
 
   return (
-    
-    <div>      
+    <div>
       <div className="place-order-body">
         <header className="place-order-header">
           <div className="place-order-logo">MOS BURGER</div>
           <div className="place-order-search-container">
             <div className="place-order-search-box">
               <i className="place-order-fas fa-search"></i>
-              <input type="text" placeholder="Search menu items..." />
+              <input
+                type="text"
+                value={searchFoodItem}
+                onChange={(e) => setSearchFoodItem(e.target.value)}
+                placeholder="Search menu items..."
+              />
             </div>
           </div>
-          <Navbar/>
+          <Navbar />
         </header>
 
         <main className="place-order-main-container">
@@ -237,7 +282,7 @@ const PlaceOrderPage = () => {
           </nav>
 
           <section className="place-order-items-grid">
-            {foodItems.map((food) => (
+            {filterFoodItem.map((food) => (
               <div
                 key={food.itemId}
                 className="place-order-item-card"
@@ -254,6 +299,7 @@ const PlaceOrderPage = () => {
                 <div className="place-order-item-details">
                   <div className="place-order-item-name">{food.itemName}</div>
                   <div className="place-order-item-price">Rs. {food.price}</div>
+                  <div className="place-order-item-qty">Quantity: {food.qtyOnHand}</div>
                 </div>
               </div>
             ))}
@@ -261,6 +307,12 @@ const PlaceOrderPage = () => {
           </section>
 
           <aside className="place-order-cart-container">
+            <Snackbar open={alertPopup} autoHideDuration={3000} onClose={handleClose}>
+              <Alert onClose={handleClose} severity="success">
+                Order placed successfully!
+              </Alert>
+            </Snackbar>
+
             <div className="place-order-customer-selection">
               <div className="place-order-cart-header">
                 Order ID : {orderId}
@@ -331,12 +383,13 @@ const PlaceOrderPage = () => {
                   key={cartAddingFoodItem.itemId}
                   className="place-order-cart-item"
                 >
-                  <div className="place-order-cart-item-details">
+                  <button className="place-order-quantity-btn-close" onClick={() => handleRemove(cartAddingFoodItem)}>x</button>
+                  <div className="place-order-cart-item-details">                    
                     <div>{cartAddingFoodItem.itemName}</div>
                     <div>Rs. {cartAddingFoodItem.unitPrice}</div>
                   </div>
                   <div className="place-order-cart-item-actions">
-                    <button className="place-order-quantity-btn">-</button>
+                    <button className="place-order-quantity-btn">-</button>                    
                     <span>{cartAddingFoodItem.quantity}</span>
                     <button className="place-order-quantity-btn">+</button>
                   </div>
@@ -355,7 +408,12 @@ const PlaceOrderPage = () => {
               <div className="place-order-payment-input">
                 <input type="number" placeholder="Enter cash amount" />
               </div>
-              <button className="place-order-print-btn" onClick={handlePlacingOrder}>Place Order</button>
+              <button
+                className="place-order-print-btn"
+                onClick={handlePlacingOrder}
+              >
+                Place Order
+              </button>
             </div>
           </aside>
         </main>
