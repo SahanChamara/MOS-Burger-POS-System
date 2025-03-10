@@ -14,7 +14,7 @@ public class Customer {
     private Integer customerId;
     private String name;
     private String contactNumber;
-    private Integer totalOrders;
+    private String address;
     private boolean isDeleted;
 
 }

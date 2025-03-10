@@ -1,8 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../navbar/navbar";
 import "./CustomerManagement.css";
+import axios from "axios";
+import { Button } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
+import Stack from "@mui/material/Stack";
 
 const CustomerManagement = () => {
+  // Load Customer Table
+  const [customerList, setCustomerList] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/api/v1/customer/getAll")
+      .then((response) => {
+        setCustomerList(response.data);
+      });
+  }, []);
+
   return (
     <div>
       <div className="customer-body">
@@ -133,19 +149,38 @@ const CustomerManagement = () => {
                 <table className="customer-customers-table">
                   <thead>
                     <tr>
-                      <th>Customer Details</th>
+                      <th>Customer Name</th>
                       <th>Contact Information</th>
-                      <th>Visit Stats</th>
+                      <th>Customer Address</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody id="customersTableBody">
-                    {/* <!-- Customer rows will be inserted here via Dynamically --> */}
+                    {customerList.map((customer) => (
+                      <tr key={customer.customerId}>
+                        <td>{customer.name}</td>
+                        <td>{customer.contactNumber}</td>
+                        <td>{customer.address}</td>
+                        <td>
+                          <Stack direction="row" spacing={2}>
+                            <Button
+                              variant="contained"
+                              startIcon={<EditIcon />}
+                            ></Button>
+                            <Button
+                              variant="contained"
+                              color="error"
+                              endIcon={<PersonRemoveIcon />}
+                            ></Button>
+                          </Stack>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
 
-                {/* <!-- Empty State (Hidden if there are customers) --> */}
-                <div
+                {(customerList.length === 0) && (
+                  <div
                   className="customer-empty-state"
                   id="emptyState"
                   /* style="display: none;" */
@@ -162,6 +197,7 @@ const CustomerManagement = () => {
                     Add New Customer
                   </button>
                 </div>
+                ) }
               </div>
             </div>
           </div>
