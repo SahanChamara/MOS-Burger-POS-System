@@ -28,5 +28,9 @@ public class CustomerEntity {
     @OneToMany(mappedBy = "customer")
     private List<OrderEntity> orders;
 
+    public void softDelete(){
+        this.isDeleted=true;
+    }
+
 
 }
