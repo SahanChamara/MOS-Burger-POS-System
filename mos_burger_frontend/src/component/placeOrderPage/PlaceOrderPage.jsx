@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./PlaceOrderPage.css";
 import axios from "axios";
 import Navbar from "../navbar/navbar";
 import { Alert, Snackbar, Button } from "@mui/material";
+import Invoice from "../invoice/Invoice";
+import { useReactToPrint } from "react-to-print";
 
 const PlaceOrderPage = () => {
   // Load All Food Items
@@ -124,9 +126,13 @@ const PlaceOrderPage = () => {
   }, [foodItemArr, qtyChanging]);
 
   // Remove Cart Item
-  const handleRemove = (CartAddedFoodItem) => {    
-    setFoodItemArr((prevItems) => prevItems.filter((foodItem) => foodItem.itemId !== CartAddedFoodItem.itemId));
-  }
+  const handleRemove = (CartAddedFoodItem) => {
+    setFoodItemArr((prevItems) =>
+      prevItems.filter(
+        (foodItem) => foodItem.itemId !== CartAddedFoodItem.itemId
+      )
+    );
+  };
 
   // this use effect used for debug purpose only...
   useEffect(() => {
@@ -180,9 +186,14 @@ const PlaceOrderPage = () => {
     console.log(order);
 
     if (order.orderDate) {
+      setOrderDetails(order);
       handlePlaceOrderAPI();
     }
   }, [order]);
+
+  // populating the invoice
+  const [showInvoice, setShowInvoice] = useState(false);
+  const [orderDetails, setOrderDetails] = useState(null);
 
   const handlePlaceOrderAPI = async () => {
     console.log("api pass oder objetc : ", order);
@@ -194,6 +205,8 @@ const PlaceOrderPage = () => {
           setAlertPopup(true);
           setFoodItemArr([]);
           getLastOrderId();
+          // setOrderDetails(order);
+          setShowInvoice(true);
         }
       });
   };
@@ -216,11 +229,11 @@ const PlaceOrderPage = () => {
     }
   }, [searchFoodItem, foodItems]);
 
-  // User entered amount 
+  // User entered amount
   const [enteredAmunt, setEnteredAmunt] = useState("");
   const handleAmountChange = (e) => {
     setEnteredAmunt(e.target.value);
-  }
+  };
 
   return (
     <div>
@@ -305,7 +318,9 @@ const PlaceOrderPage = () => {
                 <div className="place-order-item-details">
                   <div className="place-order-item-name">{food.itemName}</div>
                   <div className="place-order-item-price">Rs. {food.price}</div>
-                  <div className="place-order-item-qty">Quantity: {food.qtyOnHand}</div>
+                  <div className="place-order-item-qty">
+                    Quantity: {food.qtyOnHand}
+                  </div>
                 </div>
               </div>
             ))}
@@ -313,7 +328,11 @@ const PlaceOrderPage = () => {
           </section>
 
           <aside className="place-order-cart-container">
-            <Snackbar open={alertPopup} autoHideDuration={3000} onClose={handleClose}>
+            <Snackbar
+              open={alertPopup}
+              autoHideDuration={3000}
+              onClose={handleClose}
+            >
               <Alert onClose={handleClose} severity="success">
                 Order placed successfully!
               </Alert>
@@ -389,13 +408,18 @@ const PlaceOrderPage = () => {
                   key={cartAddingFoodItem.itemId}
                   className="place-order-cart-item"
                 >
-                  <button className="place-order-quantity-btn-close" onClick={() => handleRemove(cartAddingFoodItem)}>x</button>
-                  <div className="place-order-cart-item-details">                    
+                  <button
+                    className="place-order-quantity-btn-close"
+                    onClick={() => handleRemove(cartAddingFoodItem)}
+                  >
+                    x
+                  </button>
+                  <div className="place-order-cart-item-details">
                     <div>{cartAddingFoodItem.itemName}</div>
                     <div>Rs. {cartAddingFoodItem.unitPrice}</div>
                   </div>
                   <div className="place-order-cart-item-actions">
-                    <button className="place-order-quantity-btn">-</button>                    
+                    <button className="place-order-quantity-btn">-</button>
                     <span>{cartAddingFoodItem.quantity}</span>
                     <button className="place-order-quantity-btn">+</button>
                   </div>
@@ -412,7 +436,12 @@ const PlaceOrderPage = () => {
                 <span>Rs. {totalPrice - enteredAmunt}</span>
               </div>
               <div className="place-order-payment-input">
-                <input type="number" placeholder="Enter cash amount" value={enteredAmunt} onChange={handleAmountChange}/>
+                <input
+                  type="number"
+                  placeholder="Enter cash amount"
+                  value={enteredAmunt}
+                  onChange={handleAmountChange}
+                />
               </div>
               <button
                 className="place-order-print-btn"
@@ -420,6 +449,11 @@ const PlaceOrderPage = () => {
               >
                 Place Order
               </button>
+
+              {/* Invoice */}
+              {showInvoice && (
+                <Invoice orderDetails={orderDetails} onClose={() => setShowInvoice(false)} />
+              )}
             </div>
           </aside>
         </main>
