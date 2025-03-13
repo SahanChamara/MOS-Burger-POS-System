@@ -92,7 +92,7 @@ const CustomerManagement = () => {
   const [newCustomer, setnewCustomer] = useState({
     name: "",
     contactNumber: "",
-    address: ""
+    address: "",
   });
 
   // add customer alert component
@@ -107,18 +107,38 @@ const CustomerManagement = () => {
     });
   };
 
+  // add customer API call
   const handleAddCustomer = async (event) => {
     event.preventDefault();
-    
-    await axios.post('http://localhost:8080/api/v1/customer/add',newCustomer)
-    .then(response => {
-      if(response.data === "Customer Saved Success"){
-        setSavedAlert(true);
-        setSavedResponse(response.data);
-        loadCustomer();
-      }
-    })
+
+    await axios
+      .post("http://localhost:8080/api/v1/customer/add", newCustomer)
+      .then((response) => {
+        if (response.data === "Customer Saved Success") {
+          setSavedAlert(true);
+          setSavedResponse(response.data);
+          loadCustomer();
+        }
+      });
   };
+
+  // search customer
+  const [searchCustomer, setSearchCustomer] = useState("");
+  const [filteredCustomers, setfilteredCustomers] = useState(customerList);
+
+  useEffect(() => {
+    if (searchCustomer.trim() === "") {
+      setfilteredCustomers(customerList);
+    } else {
+      setfilteredCustomers(
+        filteredCustomers.filter((customer) =>
+          customer.name
+            .toLowerCase()
+            .includes(searchCustomer.toLowerCase())
+        )
+      );
+    }
+  }, [searchCustomer, customerList]);
 
   return (
     <div>
@@ -157,92 +177,94 @@ const CustomerManagement = () => {
                     className="customer-search-input"
                     id="customerSearch"
                     placeholder="Search customer by name, phone, or email..."
+                    value={searchCustomer}
+                    onChange={(e) => setSearchCustomer(e.target.value)}
                   />
                 </div>
               </div>
 
               {/* <!-- Add/Edit Customer Form (Hidden by default) --> */}
-                <div
-                  className="customer-form-container"
-                  id="customerFormContainer"
-                  /* style="display: none;" */
-                >
-                  <div className="customer-form-header">
-                    <h3 className="customer-form-title" id="formTitle">
-                      Add New Customer
-                    </h3>
-                    <button className="customer-close-btn" id="closeFormBtn">
-                      <i className="customer-fas fa-times"></i>
+              <div
+                className="customer-form-container"
+                id="customerFormContainer"
+                /* style="display: none;" */
+              >
+                <div className="customer-form-header">
+                  <h3 className="customer-form-title" id="formTitle">
+                    Add New Customer
+                  </h3>
+                  <button className="customer-close-btn" id="closeFormBtn">
+                    <i className="customer-fas fa-times"></i>
+                  </button>
+                </div>
+                <div className="customer-form-content">
+                  <div className="customer-form-grid">
+                    <div className="customer-form-group">
+                      <label className="customer-form-label">
+                        Name <span className="customer-required">*</span>
+                      </label>
+                      <div className="customer-input-with-icon">
+                        <i className="customer-fas fa-user input-icon"></i>
+                        <input
+                          type="text"
+                          className="customer-form-input"
+                          id="name"
+                          placeholder="Full Name"
+                          name="name"
+                          onChange={handlenewCustomer}
+                        />
+                      </div>
+                    </div>
+                    <div className="customer-form-group">
+                      <label className="customer-form-label">
+                        Phone Number{" "}
+                        <span className="customer-required">*</span>
+                      </label>
+                      <div className="customer-input-with-icon">
+                        <i className="customer-fas fa-phone input-icon"></i>
+                        <input
+                          type="text"
+                          className="customer-form-input"
+                          id="contactNumber"
+                          placeholder="Phone Number"
+                          name="contactNumber"
+                          onChange={handlenewCustomer}
+                        />
+                      </div>
+                    </div>
+                    <div className="customer-form-group">
+                      <label className="customer-form-label">Address</label>
+                      <div className="customer-input-with-icon">
+                        <i className="customer-fas fa-map-marker-alt input-icon"></i>
+                        <input
+                          type="text"
+                          className="customer-form-input"
+                          id="address"
+                          placeholder="Full Address"
+                          name="address"
+                          onChange={handlenewCustomer}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="customer-form-actions">
+                    <button
+                      className="customer-cancel-btn"
+                      id="cancelBtn"
+                      /* style="display: none;" */
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="customer-save-btn"
+                      id="saveCustomerBtn"
+                      onClick={handleAddCustomer}
+                    >
+                      Add Customer
                     </button>
                   </div>
-                  <div className="customer-form-content">
-                    <div className="customer-form-grid">
-                      <div className="customer-form-group">
-                        <label className="customer-form-label">
-                          Name <span className="customer-required">*</span>
-                        </label>
-                        <div className="customer-input-with-icon">
-                          <i className="customer-fas fa-user input-icon"></i>
-                          <input
-                            type="text"
-                            className="customer-form-input"
-                            id="name"
-                            placeholder="Full Name"
-                            name="name"
-                            onChange={handlenewCustomer}
-                          />
-                        </div>
-                      </div>
-                      <div className="customer-form-group">
-                        <label className="customer-form-label">
-                          Phone Number{" "}
-                          <span className="customer-required">*</span>
-                        </label>
-                        <div className="customer-input-with-icon">
-                          <i className="customer-fas fa-phone input-icon"></i>
-                          <input
-                            type="text"
-                            className="customer-form-input"
-                            id="contactNumber"
-                            placeholder="Phone Number"
-                            name="contactNumber"
-                            onChange={handlenewCustomer}
-                          />
-                        </div>
-                      </div>
-                      <div className="customer-form-group">
-                        <label className="customer-form-label">Address</label>
-                        <div className="customer-input-with-icon">
-                          <i className="customer-fas fa-map-marker-alt input-icon"></i>
-                          <input
-                            type="text"
-                            className="customer-form-input"
-                            id="address"
-                            placeholder="Full Address"
-                            name="address"
-                            onChange={handlenewCustomer}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="customer-form-actions">
-                      <button
-                        className="customer-cancel-btn"
-                        id="cancelBtn"
-                        /* style="display: none;" */
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        className="customer-save-btn"
-                        id="saveCustomerBtn"
-                        onClick={handleAddCustomer}
-                      >
-                        Add Customer
-                      </button>
-                    </div>
-                  </div>
                 </div>
+              </div>
 
               {/* <!-- Customers Table --> */}
               <div className="customer-table-container">
@@ -256,7 +278,7 @@ const CustomerManagement = () => {
                     </tr>
                   </thead>
                   <tbody id="customersTableBody">
-                    {customerList.map((customer) => (
+                    {filteredCustomers.map((customer) => (
                       <tr key={customer.customerId}>
                         <td>{customer.name}</td>
                         <td>{customer.contactNumber}</td>
@@ -342,7 +364,7 @@ const CustomerManagement = () => {
             {savedResponse}
           </Alert>
         </Snackbar>
-        
+
         {/* Delete Alert */}
         <Snackbar
           open={alertDelete}

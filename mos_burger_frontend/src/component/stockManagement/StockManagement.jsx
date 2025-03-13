@@ -146,7 +146,7 @@ const StockManagement = () => {
   };
 
   //Search Item
-  const [searchCategoryName, setSearchCategoryName] = useState(""); // set the input Category Name
+  /*   const [searchCategoryName, setSearchCategoryName] = useState(""); // set the input Category Name
   const [errorMsg, setErrorMsg] = useState(""); // set the error msg
   const [alertPopup, setAlertPopup] = useState(false);
 
@@ -161,11 +161,26 @@ const StockManagement = () => {
       setErrorMsg(err.response.data);
       setAlertPopup(true);
     }
-  };
+  }; */
+
+  const [searchFoodItem, stesearchFoodItem] = useState("");
+  const [filterFoodItem, setFilterFoodItem] = useState(foodItems);
+
+  useEffect(() => {
+    if (searchFoodItem.trim() === "") {
+      setFilterFoodItem(foodItems);
+    } else {
+      setFilterFoodItem(
+        filterFoodItem.filter((foodItem) =>
+          foodItem.itemName.toLowerCase().includes(searchFoodItem.toLowerCase())
+        )
+      );
+    }
+  }, [searchFoodItem,foodItems]);
 
   const handleAlertClose = () => {
     setAlertPopup(false);
-  }
+  };
 
   return (
     <div>
@@ -196,7 +211,7 @@ const StockManagement = () => {
             </svg>
             <h1>MOS Burger Store Management</h1>
           </div>
-          <Navbar/>
+          <Navbar />
         </div>
 
         <div className="stock-management-container">
@@ -377,12 +392,6 @@ const StockManagement = () => {
           <div className="stock-management-card">
             <div className="stock-management-card-title">
               Current Inventory
-              <button
-                className="stock-management-btn btn-outline"
-                onClick={loadFoodItems}
-              >
-                View All
-              </button>
             </div>
             <div className="stock-management-form-group">
               <label
@@ -395,36 +404,14 @@ const StockManagement = () => {
                 type="text"
                 className="stock-management-form-control"
                 id="category"
-                value={searchCategoryName}
+                value={searchFoodItem}
                 placeholder="Enter"
                 required
-                onChange={(e) => setSearchCategoryName(e.target.value)}
+                onChange={(e) => stesearchFoodItem(e.target.value)}
               />
             </div>
-            <button
-              className="stock-management-btn btn-outline item-btn"
-              onClick={handleSearch}
-            >
-              Search
-            </button>
-
-            {/* if searched item not found alert has popup */}
-            <Snackbar
-              open={alertPopup}
-              autoHideDuration={6000}
-              onClose={handleAlertClose}
-            >
-              <Alert
-                onClose={handleAlertClose}
-                severity="error"
-                sx={{ width: "100%" }}
-              >
-                {errorMsg}
-              </Alert>
-            </Snackbar>
-
             <div className="stock-management-item-grid">
-              {foodItems.map((food) => (
+              {filterFoodItem.map((food) => (
                 <div key={food.itemId} className="stock-management-item-card">
                   <img
                     src={food.imagePath}
@@ -468,6 +455,20 @@ const StockManagement = () => {
                   </div>
                 </div>
               ))}
+
+              {filterFoodItem.length === 0 && (
+                <div
+                className="customer-empty-state"
+                id="emptyState"
+                /* style="display: none;" */
+              >
+                <div className="customer-empty-icon">
+                  <i className="customer-fas fa-users-slash"></i>
+                </div>
+                <h3 className="customer-empty-title">No Item Found</h3>                            
+              </div>
+              )}
+
             </div>
           </div>
         </div>
