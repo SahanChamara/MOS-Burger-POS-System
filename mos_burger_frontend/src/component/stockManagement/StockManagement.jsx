@@ -146,23 +146,6 @@ const StockManagement = () => {
   };
 
   //Search Item
-  /*   const [searchCategoryName, setSearchCategoryName] = useState(""); // set the input Category Name
-  const [errorMsg, setErrorMsg] = useState(""); // set the error msg
-  const [alertPopup, setAlertPopup] = useState(false);
-
-  const handleSearch = async () => {
-    try {
-      await axios
-        .get(`http://localhost:8080/api/v1/stock/search/${searchCategoryName}`)
-        .then((response) => {
-          setFoodItems(response.data); // i use the load all item setFoodItems useState to get approach to this
-        });
-    } catch (err) {
-      setErrorMsg(err.response.data);
-      setAlertPopup(true);
-    }
-  }; */
-
   const [searchFoodItem, stesearchFoodItem] = useState("");
   const [filterFoodItem, setFilterFoodItem] = useState(foodItems);
 
@@ -176,7 +159,7 @@ const StockManagement = () => {
         )
       );
     }
-  }, [searchFoodItem,foodItems]);
+  }, [searchFoodItem, foodItems]);
 
   const handleAlertClose = () => {
     setAlertPopup(false);
@@ -252,7 +235,9 @@ const StockManagement = () => {
                   <option value="burger">Burger</option>
                   <option value="chicken">Chicken</option>
                   <option value="fries"> Fries</option>
-                  <option value="desserts">Desserts</option>
+                  <option value="pasta">Pasta</option>
+                  <option value="submarines">Submarines</option>
+                  <option value="beverages">Beverages</option>
                 </select>
               </div>
 
@@ -390,9 +375,7 @@ const StockManagement = () => {
           </div>
 
           <div className="stock-management-card">
-            <div className="stock-management-card-title">
-              Current Inventory
-            </div>
+            <div className="stock-management-card-title">Current Inventory</div>
             <div className="stock-management-form-group">
               <label
                 className="stock-management-form-label"
@@ -458,17 +441,16 @@ const StockManagement = () => {
 
               {filterFoodItem.length === 0 && (
                 <div
-                className="customer-empty-state"
-                id="emptyState"
-                /* style="display: none;" */
-              >
-                <div className="customer-empty-icon">
-                  <i className="customer-fas fa-users-slash"></i>
+                  className="customer-empty-state"
+                  id="emptyState"
+                  /* style="display: none;" */
+                >
+                  <div className="customer-empty-icon">
+                    <i className="customer-fas fa-users-slash"></i>
+                  </div>
+                  <h3 className="customer-empty-title">No Item Found</h3>
                 </div>
-                <h3 className="customer-empty-title">No Item Found</h3>                            
-              </div>
               )}
-
             </div>
           </div>
         </div>

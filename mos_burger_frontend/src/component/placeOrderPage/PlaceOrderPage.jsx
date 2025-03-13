@@ -216,6 +216,12 @@ const PlaceOrderPage = () => {
     }
   }, [searchFoodItem, foodItems]);
 
+  // User entered amount 
+  const [enteredAmunt, setEnteredAmunt] = useState("");
+  const handleAmountChange = (e) => {
+    setEnteredAmunt(e.target.value);
+  }
+
   return (
     <div>
       <div className="place-order-body">
@@ -403,10 +409,10 @@ const PlaceOrderPage = () => {
               </div>
               <div className="place-order-total-amount">
                 <span>Total Amount:</span>
-                <span>Rs. {totalPrice}</span>
+                <span>Rs. {totalPrice - enteredAmunt}</span>
               </div>
               <div className="place-order-payment-input">
-                <input type="number" placeholder="Enter cash amount" />
+                <input type="number" placeholder="Enter cash amount" value={enteredAmunt} onChange={handleAmountChange}/>
               </div>
               <button
                 className="place-order-print-btn"
